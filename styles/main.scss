@@ -1,0 +1,340 @@
+/* make the customizations */
+$theme-colors: (
+    "gray-1": #333333,
+    "gray-2": #4f4f4f,
+    "gray-3": #828282,
+    "gray-4": #bdbdbd,
+    "gray-5": #e0e0e0,
+    "gray-6": #f2f2f2,
+    "primary": #36A0DD,
+    "secondary": #e97979,
+    "light": #ebedf1,
+    "dark": #373d4a,
+    "black": #292b30,
+    "white": #ffffff,
+);
+
+/* import bootstrap to set changes */
+@import "~bootstrap/scss/bootstrap";
+
+@import './components/courseCard';
+@import './components/skeleton';
+@import './components/navbar';
+@import './components/masonry';
+@import './components/filter';
+@import './components/btn';
+@import './components/videoPlayer';
+@import './components/uploaders';
+@import './components/balance';
+
+@import './pages/auth';
+@import './pages/course';
+@import './pages/lesson';
+@import './pages/user';
+@import './pages/controlPanel';
+
+#__next-prerender-indicator{
+    display: none !important;
+}
+
+.theme-dark {
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #242424;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    ::-webkit-scrollbar {
+        width: 2px;
+    }
+}
+
+.theme-light {
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #ececec;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    ::-webkit-scrollbar {
+        width: 2px;
+    }
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+}
+
+.shadow-custom {
+    box-shadow: 0 2px 2px rgba($color: #000000, $alpha: 0.3);
+}
+
+.round-custom {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+main.theme-dark {
+    background: map-get($map: $theme-colors, $key: "dark");
+    color: map-get($map: $theme-colors, $key: "white");
+}
+
+main.theme-light {
+    background: map-get($map: $theme-colors, $key: "light");
+    color: map-get($map: $theme-colors, $key: "black");
+}
+
+main {
+    display: block;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+
+
+@media screen and (max-width: 768px) {
+    main:not(.no_menu) {
+        padding-bottom: 50px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    main:not(.no_menu) {
+        padding-left: 50px;
+    }
+}
+
+.loadingIndicator {
+    position: fixed;
+    background: #00000080;
+    backdrop-filter: blur(10px);
+    z-index: 9;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: 0.3s ease all;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+
+    > div {
+        background: map-get($map: $theme-colors, $key: "primary");
+        height: 100px;
+        width: 200px;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 50px 100%);
+        border-bottom: 3px solid #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 50px;
+        transform: translateX(0);
+        transition: all 0.8s ease;
+    }
+
+    &:not(.active) {
+        opacity: 0;
+        > div {
+            transform: translateX(100%);
+        }
+    }
+}
+
+main.no_menu {
+    .loadingIndicator {
+        margin-left: 0;
+        margin-bottom: 0;
+    }
+}
+
+
+.theme-dark {
+    input,
+    select,
+    textarea {
+        background: map-get($map: $theme-colors, $key: "dark") !important;
+        border-color: map-get($map: $theme-colors, $key: "gray-2") !important;
+        color: map-get($map: $theme-colors, $key: "gray-5") !important;
+    }
+}
+
+.theme-light {
+    input,
+    select,
+    checkbox,
+    textarea {
+        background: map-get($map: $theme-colors, $key: "light") !important;
+        border-color: map-get($map: $theme-colors, $key: "gray-5") !important;
+        color: map-get($map: $theme-colors, $key: "black") !important;
+    }
+}
+
+.modalsPanel {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    user-select: none;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.toastsPanel {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    max-width: 300px;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: stretch;
+    margin: 10px;
+    z-index: 101;
+    user-select: none;
+    pointer-events: none;
+
+    @include media-breakpoint-down(md) {
+        margin-bottom: 60px;
+    }
+    .close {
+        text-shadow: none;
+    }
+    > * {
+        pointer-events: all;
+    }
+    > *:not(:last-child) {
+        margin-bottom: 10px;
+    }
+}
+
+main.no_menu {
+    .toastsPanel {
+        margin-bottom: 10px;
+    }
+}
+
+
+.theme-dark .toastsPanel {
+    .info {
+        color: map-get($map: $theme-colors, $key: "black");
+    }
+    .bg-warning {
+        color: map-get($map: $theme-colors, $key: "black");
+    }
+    .bg-danger {
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+    .bg-success {
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+    .toast-header {
+        background-color: rgba($color: #000000, $alpha: 0.4);
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+}
+
+.theme-light .toastsPanel {
+    .info {
+        color: map-get($map: $theme-colors, $key: "black");
+    }
+    .bg-warning {
+        color: map-get($map: $theme-colors, $key: "black");
+    }
+    .bg-danger {
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+    .bg-success {
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+    .toast-header {
+        background-color: rgba($color: #ffffff, $alpha: 0.4);
+        color: map-get($map: $theme-colors, $key: "black");
+    }
+}
+
+.theme-dark {
+    .list-group-item {
+        background: map-get($map: $theme-colors, $key: "black");
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+
+    .list-group-item-action:hover {
+        background: lighten($color: map-get($map: $theme-colors, $key: "black"), $amount: 10);
+    }
+}
+
+.theme-light {
+    .list-group-item {
+        background: map-get($map: $theme-colors, $key: "white");
+        color: map-get($map: $theme-colors, $key: "black");
+    }
+
+    .list-group-item-action:hover {
+        background: darken($color: map-get($map: $theme-colors, $key: "white"), $amount: 10);
+    }
+}
+
+.theme-dark {
+    .card {
+        background: map-get($map: $theme-colors, $key: "black");
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+}
+
+.theme-light {
+    .card {
+        background: map-get($map: $theme-colors, $key: "white");
+        color: map-get($map: $theme-colors, $key: "black");
+    }
+}
+
+
+
+@import '~video-react/styles/scss/video-react'; // or import scss

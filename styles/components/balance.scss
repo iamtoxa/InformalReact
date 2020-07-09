@@ -1,0 +1,33 @@
+.balance{
+    position: fixed;
+    display: flex;
+    top: 20px;
+    right: 0;
+    width: auto;
+    padding: 10px;
+    padding-right: 20px;
+    border-radius: 5px;
+    transform: translateX(calc(100% - 52px));
+    transition: all 0.3s ease;
+    align-items: center;
+
+    border: 3px solid map-get($map: $theme-colors, $key: "primary");
+    z-index: 10;
+
+    .icon{
+        margin-right: 10px;
+    }
+
+    &:hover{
+        transform: translateX(5px);
+    }
+}
+
+
+.theme-dark .balance {
+    background: map-get($map: $theme-colors, $key: "black");
+}
+
+.theme-light .balance {
+    background: map-get($map: $theme-colors, $key: "white");
+}

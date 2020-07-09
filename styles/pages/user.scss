@@ -1,0 +1,196 @@
+.UserPage {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1440px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    .userCard {
+        align-self: center;
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: min-content 1fr;
+
+        margin-top: 100px;
+        padding: 20px;
+        border-radius: 10px;
+        border: 3px solid map-get($map: $theme-colors, $key: "primary");
+        max-width: 960px;
+        width: 100%;
+        flex-wrap: wrap;
+
+        .image {
+            position: relative;
+            margin-top: -120px;
+            margin-right: 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .img {
+                height: 200px;
+                width: 200px;
+                border: 3px solid map-get($map: $theme-colors, $key: "primary");
+                background: map-get($map: $theme-colors, $key: "primary");
+                border-radius: 50%;
+                object-fit: cover;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                span{
+                    font-size: 48pt;
+                    letter-spacing: 5px;
+                }
+            }
+
+            @include media-breakpoint-down(sm) {
+                grid-column-end: span 2;
+                align-self: center;
+                margin-bottom: 20px;
+                margin-right: 0;
+            }
+        }
+
+        .name {
+            text-align: right;
+
+            @include media-breakpoint-down(sm) {
+                grid-column-end: span 2;
+                text-align: center;
+
+                h1 {
+                    font-size: 18pt;
+                    font-weight: 400;
+                }
+            }
+        }
+
+        .actions {
+            margin-top: 20px;
+            margin-right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: flex-start;
+
+            > *:not(:last-child) {
+                margin-bottom: 10px;
+            }
+
+            @include media-breakpoint-down(md) {
+                grid-column-end: span 2;
+                flex-direction: row;
+                justify-content: space-between;
+                margin-right: 0;
+                > *:not(:last-child) {
+                    margin-bottom: 0;
+                    margin-right: 20px;
+                }
+                > * {
+                    flex: 1;
+                }
+            }
+
+            @include media-breakpoint-down(sm) {
+                flex-direction: column;
+                > *:not(:last-child) {
+                    margin-bottom: 15px;
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .badges {
+            margin-top: 20px;
+            h2{
+                font-size: 18pt;
+                font-weight: 400;
+            }
+
+            @include media-breakpoint-down(md) {
+                grid-column-end: span 2;
+            }
+            .content {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, 100px);
+                width: 100%;
+                gap: 20px;
+
+                
+
+                @include media-breakpoint-down(sm) {
+                    gap: 5px;
+                    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                }
+
+                > .badge {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100px;
+                    width: auto;
+                    border-radius: 10px;
+                    box-shadow: inset 0 2px 4px rgba($color: #000000, $alpha: 0.3);
+                    padding: 6px;
+
+                    .icon{
+                        width: auto;
+                        height: 50px;
+                    }
+
+                    .label{
+                        width: auto;
+                        display: block;
+                        white-space: pre-wrap;
+                        font-size: 8pt;
+                        transform: translateY(5px);
+                        font-weight: 400;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.theme-dark .UserPage {
+    .userCard {
+        background: map-get($map: $theme-colors, $key: "black");
+
+        .badges {
+            background: map-get($map: $theme-colors, $key: "dark");
+            .badge {
+                background: map-get($map: $theme-colors, $key: "black");
+                .label{
+                    color: map-get($map: $theme-colors, $key: "gray-3");
+                    .icon{
+                        color: map-get($map: $theme-colors, $key: "gray-6");
+                    }
+                }
+            }
+        }
+    }
+}
+
+.theme-light .UserPage {
+    .userCard {
+        background: map-get($map: $theme-colors, $key: "white");
+
+        .badges {
+            background: map-get($map: $theme-colors, $key: "light");
+            .badge {
+                background: map-get($map: $theme-colors, $key: "white");
+                .label{
+                    color: map-get($map: $theme-colors, $key: "gray-3");
+                }
+                .icon{
+                    color: map-get($map: $theme-colors, $key: "gray-1");
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.skeleton{
+    display: block;
+    background: #8d8d8d;
+    animation: background 3s infinite alternate;
+    border-radius: 5px;
+}
+
+
+@keyframes background {
+    50% {
+      box-shadow: 0 -200px 100px -100px #585858 inset;
+    }
+  }

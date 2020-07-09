@@ -1,0 +1,174 @@
+.CourseCard{
+    transform-style: preserve-3d;
+    perspective: 400px;
+
+    &.loading > div{
+        animation: transform 3s infinite;
+        @keyframes transform {
+            100% {
+                transform: rotateX(10deg) scale(0.9);
+            }
+            50% {
+                transform: rotateX(7deg) scale(0.95);
+            }
+            0% {
+                transform: rotateX(10deg) scale(0.9);
+            }
+          }        
+    }
+
+    >div{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+    
+        height: auto;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    }
+
+
+    @include media-breakpoint-up(md) {
+        min-width: 400px;
+        max-width: 400px;
+    }
+    @include media-breakpoint-down(md) {
+        min-width: 290px;
+        max-width: 290px;
+        height: auto
+    }
+
+    .header{
+        position: relative;
+        height: calc(400px/1.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        @include media-breakpoint-down(md) {
+            height: calc(290px/1.5);
+        }
+
+        img{
+            object-fit: cover;
+            object-position: center;
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: none;
+        }
+
+        .badges{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 10px;
+            > div{
+                padding: 3px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 30px;
+                width: 30px;
+                border-radius: 5px;
+                border: solid 3px map-get($map: $theme-colors, $key: "primary");
+                color: map-get($map: $theme-colors, $key: "white");
+                background: map-get($map: $theme-colors, $key: "black");
+            }
+
+            > *:not(:last-child){
+                margin-right: 10px;
+            }
+        }
+    }
+
+    .body{
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        @include media-breakpoint-down(md) {
+            padding: 10px;
+        }
+        .title{
+            display: block;
+            font-size: 21pt;
+            color: map-get($map: $theme-colors, $key: "gray-1");
+            width: 100%;
+            min-height: 21pt;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            @include media-breakpoint-down(md) {
+                font-size: 18pt;
+                min-height: 18pt;
+                margin-bottom: 10px;
+            }
+        }
+
+        .description{
+            padding: 0;
+            display: block;
+            flex: 1;
+            font-size: 13pt;
+            color: map-get($map: $theme-colors, $key: "gray-2");
+            width: 100%;
+            min-height: 13pt;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            @include media-breakpoint-down(md) {
+                font-size: 11pt;
+                min-height: 11pt;
+                margin-bottom: 10px;
+            }
+        }
+
+        .actions{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+
+            >*:not(:last-child){
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+
+.theme-dark .CourseCard {
+    > div{
+        background: map-get($map: $theme-colors, $key: "black");
+    }
+
+    .body{
+        .title{
+            color: map-get($map: $theme-colors, $key: "white");
+        }
+        .description{
+            color: map-get($map: $theme-colors, $key: "gray-5");
+        }
+    }
+}
+
+.theme-light .CourseCard {
+    
+    > div{
+        background: map-get($map: $theme-colors, $key: "white");
+    }
+
+    .body{
+        .title{
+            color: map-get($map: $theme-colors, $key: "gray-1");
+        }
+        .description{
+            color: map-get($map: $theme-colors, $key: "gray-2");
+        }
+    }
+}

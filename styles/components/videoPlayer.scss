@@ -1,0 +1,29 @@
+.videoPlayer {
+    position: relative;
+    width: 100%;
+    border-radius: 5px;
+
+    --aspect-ratio: (16/9);
+    padding-bottom: calc(100% / (var(--aspect-ratio)));
+
+
+    > .video, > video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 5px;
+    }
+}
+
+.theme-dark .videoPlayer {
+    background: map-get($map: $theme-colors, $key: "black");
+}
+
+.theme-light .videoPlayer {
+    background: rgba($color: #000000, $alpha: 0.5)
+}

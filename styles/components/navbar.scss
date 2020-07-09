@@ -1,0 +1,109 @@
+.page-navbar {
+    position: fixed;
+    display: flex;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.33);
+    border-color: map-get($map: $theme-colors, $key: "primary");
+    z-index: 100;
+
+    .item {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        width: 50px;
+        overflow: hidden;
+
+        &::before {
+            position: absolute;
+            content: "";
+            background: map-get($map: $theme-colors, $key: "primary");
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .icon {
+            transform: scale(1);
+            transition: all 0.2s ease;
+        }
+        &:hover {
+            .icon {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    @include media-breakpoint-up(sm) {
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        width: 50px;
+        height: auto;
+        overflow-x: hidden;
+        border-right-style: solid;
+        border-right-width: 3px;
+        border-top-width: 0px;
+        flex-direction: column;
+        justify-content: flex-start;
+
+        .item::before {
+            transform:  translateX(-100%) scale(1);
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        top: auto;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: auto;
+        height: 50px;
+        overflow-y: hidden;
+        border-top-style: solid;
+        border-top-width: 3px;
+        border-right-width: 0px;
+        flex-direction: row;
+        justify-content: space-around;
+        transition: 0.3s ease all;
+        flex-wrap: wrap;
+
+        .item{
+            min-width: 25%;
+        }
+
+        .item::before {
+            transform: translateX(0) scale(0);
+            border-radius: 25px;
+        }
+
+        &.opened {
+            height: 100px;
+        }
+    }
+
+    .item.active::before {
+        transform: translateX(0) scale(1);
+        border-radius: 0px;
+    }
+}
+
+
+.theme-dark .page-navbar {
+    background: map-get($map: $theme-colors, $key: "black");
+
+    .item {
+        color: map-get($map: $theme-colors, $key: "gray-6");
+    }
+}
+
+.theme-light .page-navbar {
+    background: map-get($map: $theme-colors, $key: "white");
+
+    .item {
+        color: map-get($map: $theme-colors, $key: "gray-1");
+    }
+}

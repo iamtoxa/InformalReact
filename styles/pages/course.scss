@@ -1,0 +1,262 @@
+.CoursePage{
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1440px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    .header{
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+        overflow: hidden;
+        border-radius: 10px;
+        border: 3px solid map-get($map: $theme-colors, $key: "primary");
+        margin-bottom: 20px;
+        box-shadow: 0 2px 2px rgba($color: #000000, $alpha: 0.3);
+
+        .imageWrapper{
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            
+            flex: 0.4;
+            align-self: flex-start;
+            margin-bottom: 20px;
+            .image{
+                position: relative;
+                width: 100%;
+                padding-bottom: 66.66%;
+                border-radius: 0 0 10px 0;
+                border: 3px solid map-get($map: $theme-colors, $key: "primary");
+                background: #000000;
+                border-top-width: 0;
+                border-left-width: 0;
+                overflow: hidden;
+
+                @include media-breakpoint-down(md) {
+                    border-right-width: 0;
+                    border-radius: 0;
+                }
+
+
+                img{
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: center;
+                }
+
+                .price{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    min-width: 150px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: auto;
+                    padding: 5px 5px;
+                    padding-right: 45px;
+                    background: map-get($map: $theme-colors, $key: "primary");
+                    clip-path: polygon(0 0, 100% 0, calc(100% - 50px) 100%, 0 100%);
+                    font-size: 16pt;
+                    color: map-get($map: $theme-colors, $key: "white");
+                }
+
+                .badges{
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    margin: 10px;
+                    > div{
+                        padding: 3px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 30px;
+                        width: 30px;
+                        border-radius: 5px;
+                        border: solid 3px map-get($map: $theme-colors, $key: "primary");
+                        color: map-get($map: $theme-colors, $key: "white");
+                        background: map-get($map: $theme-colors, $key: "black");
+                    }
+        
+                    > *:not(:last-child){
+                        margin-right: 10px;
+                    }
+                }
+            }
+
+            .actions{
+                margin: 20px 20px 0 20px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+    
+                >*:not(:last-child){
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .info{
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            flex: 0.6;
+
+            .title{
+                font-size: 24pt;
+                font-weight: 400;
+                line-height: 1.1;
+
+                @include media-breakpoint-down(md) {
+                    font-size: 20pt;
+                }
+            }
+
+            .topGroup{
+                color: map-get($map: $theme-colors, $key: "primary");
+                font-size: 14pt;
+                margin-bottom: 20px;
+                font-weight: 400;
+                margin-top: -5px;
+                display: flex;
+                flex-wrap: wrap;
+                >*:not(:last-child){
+                    margin-right: 20px;
+                }
+            }
+
+            .description{
+                flex: 1;
+                font-size: 16pt;
+                @include media-breakpoint-down(md) {
+                    font-size: 14pt;
+                }
+            }
+        }
+
+        @include media-breakpoint-down(md) {
+            flex-direction: column;
+            .imageWrapper{
+                width: 100%;
+            }
+        }
+    }
+
+
+
+    .lessons{
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        >*:not(:last-child){
+            margin-bottom: 15px;
+        }
+
+        .lesson{
+            border-radius: 10px;
+            overflow: hidden;
+
+            .card-header{
+                position: relative;
+                display: flex;
+                align-items: center;
+                .num{
+                    color: map-get($map: $theme-colors, $key: "white");
+                    background: map-get($map: $theme-colors, $key: "primary");
+                    
+                    width: 50px;
+                    border-radius: 10px 0 10px 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 16pt;
+                    margin-right: 20px;
+                    padding: 2px 5px;
+                    
+                }
+                .title{
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    font-size: 16pt;
+                    margin-right: 20px;
+                    font-weight: 400;
+                    margin-bottom: 0;
+                }
+    
+                @include media-breakpoint-down(md) {
+                    .num{
+                        width: 40px !important;
+                        font-size: 14pt;
+                    }
+                    .title{
+                        font-size: 14pt;
+                    }
+                }
+            }
+
+            .description{
+                padding: 20px;
+                font-size: 14pt;
+            }
+        }
+    }
+}
+
+
+.theme-dark .CoursePage {
+    .header{
+        background: map-get($map: $theme-colors, $key: "black");
+        .info{
+            .description{
+                color: map-get($map: $theme-colors, $key: "gray-4");
+            }
+        }
+    }
+
+    .lessons{
+        .lesson{
+            background: map-get($map: $theme-colors, $key: "black");
+        }
+    }
+
+    .students{
+        background: map-get($map: $theme-colors, $key: "black");
+    }
+}
+
+.theme-light .CoursePage {
+    .header{
+        background: map-get($map: $theme-colors, $key: "white");
+        .info{
+            .description{
+                color: map-get($map: $theme-colors, $key: "gray-2");
+            }
+        }
+    }
+
+    .lessons{
+        .lesson{
+            background: map-get($map: $theme-colors, $key: "white");
+        }
+    }
+
+    .students{
+        background: map-get($map: $theme-colors, $key: "white");
+    }
+}

@@ -1,0 +1,69 @@
+.ImageUploader {
+    > div {
+        padding: 20px;
+        border: 3px solid map-get($map: $theme-colors, $key: "primary");
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+    }
+    .image {
+        position: relative;
+        width: 100%;
+        border-radius: 5px;
+        img, video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 5px;
+        }
+
+        .progress{
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            border-radius: 5px;
+            background: transparent;
+            &::after{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--precentage);
+                transition: all 0.2s ease;
+                background: map-get($map: $theme-colors, $key: "primary");
+                border-radius: 5px;
+            }
+        }
+    }
+    input {
+        display: none;
+    }
+    label {
+        display: block;
+        width: 100%;
+    }
+}
+
+
+
+.theme-dark .ImageUploader {
+    .image {
+        background: map-get($map: $theme-colors, $key: "dark");
+    }
+}
+
+.theme-light .ImageUploader {
+    .image {
+        background: rgba($color: #000000, $alpha: 0.5)
+    }
+}
