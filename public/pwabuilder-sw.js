@@ -48,7 +48,7 @@ workbox.routing.registerRoute(
 
 
 self.addEventListener('install', async (event) => {
-  var offlineRequest = new Request('offline.html');
+  var offlineRequest = new Request('/offline.html');
   event.waitUntil(
     fetch(offlineRequest).then(function(response) {
       return caches.open('offline').then(function(cache) {
@@ -69,7 +69,7 @@ self.addEventListener('fetch', function(event) {
           error
         );
         return caches.open('offline').then(function(cache) {
-          return cache.match('offline.html');
+          return cache.match('/offline.html');
         });
       })
     );

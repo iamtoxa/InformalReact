@@ -154,25 +154,30 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
 
 
   const handleSaveCourseInfo = (values) => {
-    // courseUpdate({
-    //   variables: {
-    //     id: props.pageId,
-    //     name: values.name,
-    //     short: values.short,
-    //     description: values.description,
-    //     categoryID: values.category.ID || values.category,
-    //     image: image,
-    //     price: Number(values.price)
-    //   }
-    // }).then(() => {
-    //   dispatch({
-    //     type: CREATE_TOAST, props: {
-    //       type: "success",
-    //       title: "Информация обновлена",
-    //       body: "Основная информация об этом курсе успешно обновлена"
-    //     }
-    //   });
-    // })
+    apolloClient.mutate({
+      mutation: COURSE_UPDATE,
+      variables: {
+        id: course.ID,
+        name: values.name,
+        short: values.short,
+        description: values.description,
+        categoryID: values.category.ID || values.category,
+        image: image,
+        price: Number(values.price)
+      }
+    })
+      .then(({ data }) => {
+        dispatch({
+          type: CREATE_TOAST, props: {
+            type: "success",
+            title: "Информация обновлена",
+            body: "Основная информация об этом курсе успешно обновлена"
+          }
+        });
+      })
+      .catch(() => {
+        return false;
+      })
   }
 
   const imagePreview = (info) => {
@@ -182,58 +187,72 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
   }
 
   const handleSendToModerate = () => {
-    // const that = this;
-    // setModerate({
-    //   variables: {
-    //     id: props.pageId,
-    //     value: "moderate"
-    //   }
-    // }).then(() => {
-    //   refetchCourse({ id: props.pageId })
-    //   dispatch({
-    //     type: CREATE_TOAST, props: {
-    //       type: "success",
-    //       title: "Отправлен на модерация",
-    //       body: "Курс успешно отправлен на модерацию"
-    //     }
-    //   });
-    // })
+    apolloClient.mutate({
+      mutation: COURSE_SET_MODERATE,
+      variables: {
+        id: course.ID,
+        value: "moderate"
+      }
+    })
+      .then(({ data }) => {
+        setCourse({...course, status: "moderate"})
+        dispatch({
+          type: CREATE_TOAST, props: {
+            type: "success",
+            title: "Модерация",
+            body: "Курс успешно отправлен на модерацию"
+          }
+        });
+      })
+      .catch(() => {
+        return false;
+      })
   }
 
   const handleAcceptCourse = () => {
-    // setModerate({
-    //   variables: {
-    //     id: props.pageId,
-    //     value: "showed"
-    //   }
-    // }).then(() => {
-    //   refetchCourse({ id: props.pageId })
-    //   dispatch({
-    //     type: CREATE_TOAST, props: {
-    //       type: "success",
-    //       title: "Модерация",
-    //       body: "Вы допустили этот курс к размещению на платформе"
-    //     }
-    //   });
-    // })
+    apolloClient.mutate({
+      mutation: COURSE_SET_MODERATE,
+      variables: {
+        id: course.ID,
+        value: "showed"
+      }
+    })
+      .then(({ data }) => {
+        setCourse({...course, status: "showed"})
+        dispatch({
+          type: CREATE_TOAST, props: {
+            type: "success",
+            title: "Модерация",
+            body: "Вы допустили этот курс к размещению на платформе"
+          }
+        });
+      })
+      .catch(() => {
+        return false;
+      })
   }
 
   const handleRejectCourse = () => {
-    // setModerate({
-    //   variables: {
-    //     id: props.pageId,
-    //     value: "rejected"
-    //   }
-    // }).then(() => {
-    //   refetchCourse({ id: props.pageId })
-    //   dispatch({
-    //     type: CREATE_TOAST, props: {
-    //       type: "info",
-    //       title: "Модерация",
-    //       body: "Вы отклонили курс от размещения на платформе"
-    //     }
-    //   });
-    // })
+     apolloClient.mutate({
+      mutation: COURSE_SET_MODERATE,
+      variables: {
+        id: course.ID,
+        value: "rejected"
+      }
+    })
+      .then(({ data }) => {
+        setCourse({...course, status: "rejected"})
+        dispatch({
+          type: CREATE_TOAST, props: {
+            type: "info",
+            title: "Модерация",
+            body: "Вы отклонили курс от размещения на платформе"
+          }
+        });
+      })
+      .catch(() => {
+        return false;
+      })
   }
 
   const onChangeOrder = (newOrder) => {
@@ -261,7 +280,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
             return true;
           })
           .catch(() => {
-            
+
             dispatch({
               type: CREATE_TOAST, props: {
                 type: "danger",

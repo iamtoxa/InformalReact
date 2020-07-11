@@ -148,7 +148,6 @@ const Page = ({ selfPage, user }) => {
 
 Page.getInitialProps = async (ctx) => {
   var atob = require('atob');
-
   var redirect = require('../../lib/redirect').default;
 
   var { id } = ctx.query;

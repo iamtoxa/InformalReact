@@ -1,0 +1,47 @@
+.lessonCreatePage{
+    .lessonType{
+        padding: 20px;
+        margin-bottom: 15px;
+        min-width: 150px;
+        max-width: 200px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .icon{
+            display: block;
+            height: 64px;
+            width: 100%;
+        }
+    }
+}
+
+
+.task-tab{
+    >*{
+        margin-right: 10px;
+        background: map-get($map: $theme-colors, $key: "primary");
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+}
+
+
+
+.theme-dark .optionsList {
+    background: map-get($map: $theme-colors, $key: "dark") !important;
+    
+    &.active{
+        background: darken($color: map-get($map: $theme-colors, $key: "primary"), $amount: 10) !important;
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+}
+
+.theme-light .optionsList {
+    background: map-get($map: $theme-colors, $key: "light") !important;
+
+    &.active{
+        background: lighten($color: map-get($map: $theme-colors, $key: "primary"), $amount: 5) !important;
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+}

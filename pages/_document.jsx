@@ -11,7 +11,6 @@ class MyDocument extends Document {
       <Html lang="ru">
         <Head>
           <link rel="icon" href="/favicon.ico" />
-          <script data-ad-client="ca-pub-5077557270258535" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" />
           <base href="/"/>
 
           <link rel='manifest' href='/manifest.json'/>

@@ -32,6 +32,7 @@ $theme-colors: (
 @import './pages/lesson';
 @import './pages/user';
 @import './pages/controlPanel';
+@import './pages/lessonEdit';
 
 #__next-prerender-indicator{
     display: none !important;
