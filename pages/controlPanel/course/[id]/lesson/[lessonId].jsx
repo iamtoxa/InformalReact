@@ -7,7 +7,6 @@ import { useRouter } from 'next/router'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { useSelector, useDispatch } from "react-redux";
-import ImageLoader from '../../../../../components/ImageLoader'
 import { CREATE_TOAST } from "../../../../../redux/actions";
 import { CREATE_MODAL } from "../../../../../redux/actions";
 
