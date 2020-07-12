@@ -17,7 +17,7 @@ app.prepare().then(() => {
   const expressApp = express()
 
   expressApp.all('*', (req, res) => {
-    req.setHeader('X-Content-Type-Options', 'nosniff');
+    res.header('X-Content-Type-Options', 'nosniff');
     return handle(req, res)
   })
 
