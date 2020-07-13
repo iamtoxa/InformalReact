@@ -16,10 +16,6 @@ const httpsOptions = {
 app.prepare().then(() => {
   const expressApp = express()
 
-  expressApp.get('*.js', (req, res) => {
-    res.header('Content-Type', 'application/javascript');
-  })
-
   expressApp.all('*', (req, res) => {
     return handle(req, res)
   })
