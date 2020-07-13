@@ -34,7 +34,7 @@ workbox.loadModule('workbox-cacheable-response');
 workbox.loadModule('workbox-range-requests');
 
 workbox.routing.registerRoute(
-  /.*\.(mp4|css|jpg|png|jpeg|svg)/,
+  /.*\.(css|jpg|png|jpeg|svg)/,
   new workbox.strategies.CacheFirst({
     cacheName: CACHE,
     plugins: [
