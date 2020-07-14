@@ -173,6 +173,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -201,6 +202,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setCourse({ ...course, status: "moderate" })
         dispatch({
           type: CREATE_TOAST, props: {
@@ -224,6 +226,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setCourse({ ...course, status: "showed" })
         dispatch({
           type: CREATE_TOAST, props: {
@@ -247,6 +250,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setCourse({ ...course, status: "archive" })
         dispatch({
           type: CREATE_TOAST, props: {
@@ -270,6 +274,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setCourse({ ...course, status: "hidden" })
         dispatch({
           type: CREATE_TOAST, props: {
@@ -293,6 +298,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setCourse({ ...course, status: "rejected" })
         dispatch({
           type: CREATE_TOAST, props: {
@@ -319,6 +325,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
           }
         })
           .then(({ data }) => {
+            apolloClient.resetStore();
             setCourse({...courseInfo, lessons: newOrder})
 
             if (index == changes.length - 1) {

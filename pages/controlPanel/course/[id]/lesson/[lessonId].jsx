@@ -274,6 +274,8 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
         }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
+
         if (_userID) {
           setLesson({ ...lessonInfo, results: [...lessonInfo.results.filter(el => el.user.ID != _userID)] })
         } else {
@@ -305,6 +307,8 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
+        
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -329,6 +333,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -354,6 +359,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -381,6 +387,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -404,6 +411,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -431,6 +439,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setLesson({ ...lessonInfo, tasks: [...lessonInfo.tasks, data.taskCreate] })
 
         dispatch({
@@ -457,6 +466,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -482,7 +492,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
-
+        apolloClient.resetStore();
         setSelectedTask(null);
         setLesson({ ...lessonInfo, tasks: [...lessonInfo.tasks.filter(el => el.ID != deleted)] })
 
@@ -514,7 +524,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
         newTasks[newTasks.findIndex(el => el.ID == selectedTask)].CorrectOption = { ID: correctID };
 
         setLesson({ ...lessonInfo, tasks: newTasks })
-
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -544,7 +554,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
         newTasks[taskIndex].options = newTasks[taskIndex].options.filter(el => el.ID != optionID);
 
         setLesson({ ...lessonInfo, tasks: newTasks })
-
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -574,7 +584,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
         newTasks[taskIndex].options = [...newTasks[taskIndex].options, data.optionCreate];
 
         setLesson({ ...lessonInfo, tasks: newTasks })
-
+        apolloClient.resetStore();
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",

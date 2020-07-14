@@ -57,6 +57,7 @@ const Page = ({ client: apolloClient, userID, categories }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         router.push(`/course/${data.courseCreate.ID}`)
         return true;
       })

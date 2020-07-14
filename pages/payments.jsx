@@ -84,7 +84,7 @@ const GET_PS_INFO = gql`
     }
 `;
 
-const Page = ({user}) => {
+const Page = ({client: apolloClient, user}) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [userInfo, setUser] = useState(user);
@@ -101,6 +101,7 @@ const Page = ({user}) => {
         m_curr: "RUB",
       }
     }).then((data) => {
+      apolloClient.resetStore();
       var sign = data.data.hashPayment;
       console.log(sign);
       if (sign.length > 1) {
@@ -161,6 +162,7 @@ const Page = ({user}) => {
               psId: values.psId
             }
           }).then((data) => {
+            apolloClient.resetStore();
             console.log(data)
             refetchMe()
 

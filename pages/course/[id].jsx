@@ -99,6 +99,7 @@ const Page = ({ client: apolloClient, course, userID, balance }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setСourse({...couseInfo, favorite: !couseInfo.favorite});
         
         if(!couseInfo.favorite){
@@ -143,6 +144,7 @@ const Page = ({ client: apolloClient, course, userID, balance }) => {
       }
     })
       .then(({ data, errors }) => {
+        apolloClient.resetStore();
         if (errors) {
           const err = errors[0].message;
 

@@ -92,6 +92,7 @@ const Page = ({ client: apolloClient, userID, user }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setUser({ ...userInfo, firstName: values.firstName.trim(), lastName: values.lastName.trim() });
 
         dispatch({
@@ -137,6 +138,7 @@ const Page = ({ client: apolloClient, userID, user }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setUser({ ...userInfo, image: `https://storage.informalplace.ru/${info.Key}` });
 
         dispatch({

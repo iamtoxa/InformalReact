@@ -96,6 +96,7 @@ const Page = ({ courseId, userID, client: apolloClient }) => {
         }
       })
         .then(({ data }) => {
+          apolloClient.resetStore();
           router.push(`/controlPanel/course/${courseId}`)
           return true;
         })
@@ -125,6 +126,7 @@ const Page = ({ courseId, userID, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         router.push(`/controlPanel/course/${courseId}`)
         return true;
       })

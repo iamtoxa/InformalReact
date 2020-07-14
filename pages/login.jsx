@@ -64,6 +64,7 @@ const Page = ({ client: apolloClient, cookies }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setCodeOpen(true);
         console.log(data);
 
@@ -117,6 +118,7 @@ const Page = ({ client: apolloClient, cookies }) => {
       }
     })
       .then(({ data, errors }) => {
+        apolloClient.resetStore();
         console.log(data)
 
         if (errors) {

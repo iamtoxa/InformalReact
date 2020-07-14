@@ -163,6 +163,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setCorrectAnswers(data.testCheckResults)
         Object.entries(tasksAnswers).forEach(([taskID, answerID]) => {
           if (data.testCheckResults.find(el => el._taskID == taskID)._answerID == answerID) {
@@ -194,6 +195,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setLesson({ ...lessonInfo, comments: [data.commentCreate, ...lessonInfo.comments] })
         return true;
       })
@@ -210,6 +212,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
+        apolloClient.resetStore();
         setLesson({ ...lessonInfo, comments: lessonInfo.comments.filter(el=>el.ID != id) })
         return true;
       })
