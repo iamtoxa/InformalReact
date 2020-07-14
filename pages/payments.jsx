@@ -1,17 +1,17 @@
+import { useState, useRef } from 'react'
 import Head from 'next/head'
-import { motion } from "framer-motion"
+
 import { Container, Button, Form, Card, Col, Row, ListGroup } from 'react-bootstrap'
 import { FaGoogle, FaVk, FaYandex } from 'react-icons/fa'
 import { MdSend, MdLockOpen } from 'react-icons/md'
-import { gql } from 'apollo-boost';
+
 import { useMutation, useQuery } from '@apollo/react-hooks';
-import { useState, useRef } from 'react'
 
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from 'next/router'
 
-import { CREATE_TOAST, CREATE_MODAL } from "../redux/actions";
-
+import { gql } from 'apollo-boost';
+import { CREATE_TOAST, CREATE_MODAL } from "~/redux/actions";
 import { withApollo } from '@apollo/react-hoc';
 
 import { Formik } from 'formik';
@@ -234,7 +234,6 @@ const Page = ({user}) => {
         <title>Пополнение баланса</title>
       </Head>
 
-      <motion.div transition={{ duration: 0.2, delay: 0 }} initial={{ opacity: 0, translateX: -50 }} animate={{ opacity: 1, translateX: 0 }} exit={{ opacity: 0 }} >
         <Container className='py-3' fluid>
           <Row>
             <Col md={12} lg={6}>
@@ -419,16 +418,15 @@ const Page = ({user}) => {
             </Col>
           </Row>
         </Container>
-      </motion.div>
     </>
   )
 }
 
 Page.getInitialProps = async (ctx) => {
     var atob = require('atob');
-    var redirect = require('../lib/redirect').default;
+    var redirect = require('~/lib/redirect').default;
 
-    const checkLoggedIn = require('../lib/checkLoggedIn').default;
+    const checkLoggedIn = require('~/lib/checkLoggedIn').default;
     const AccessToken = checkLoggedIn(ctx);
 
     const b64DecodeUnicode = (str) => {

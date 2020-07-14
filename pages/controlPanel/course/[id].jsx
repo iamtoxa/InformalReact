@@ -7,17 +7,23 @@ import { useRouter } from 'next/router'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { useSelector, useDispatch } from "react-redux";
-import ImageLoader from '../../../components/imageLoader'
-import { CREATE_TOAST } from "../../../redux/actions";
-import { CREATE_MODAL } from "../../../redux/actions";
+import ImageLoader from '~/components/imageLoader'
+import { CREATE_TOAST } from "~/redux/actions";
+import { CREATE_MODAL } from "~/redux/actions";
 
-import DraggbleList from '../../../components/draggbleList';
+import DraggbleList from '~/components/draggbleList';
+
+import HoveredBtn from '~/components/hoveredBtn';
 
 import { Formik } from 'formik';
 import { object as yupObject, string as yupString, number as yupNumber, setLocale } from 'yup';
 
-
 import { withApollo } from '@apollo/react-hoc';
+import { IoMdOpen } from 'react-icons/io';
+
+import { MdMoneyOff, MdClose, MdAdd } from 'react-icons/md';
+import { BsEyeSlash, BsArchive, BsCheck, BsArrowReturnLeft } from 'react-icons/bs';
+import { AiOutlineFileSearch } from 'react-icons/ai';
 
 setLocale({
   mixed: {
@@ -195,7 +201,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
-        setCourse({...course, status: "moderate"})
+        setCourse({ ...course, status: "moderate" })
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -218,12 +224,58 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
-        setCourse({...course, status: "showed"})
+        setCourse({ ...course, status: "showed" })
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
             title: "Модерация",
-            body: "Вы допустили этот курс к размещению на платформе"
+            body: "Курс допущен к размещению на платформе"
+          }
+        });
+      })
+      .catch(() => {
+        return false;
+      })
+  }
+
+  const handleArchiveCourse = () => {
+    apolloClient.mutate({
+      mutation: COURSE_SET_MODERATE,
+      variables: {
+        id: course.ID,
+        value: "archive"
+      }
+    })
+      .then(({ data }) => {
+        setCourse({ ...course, status: "archive" })
+        dispatch({
+          type: CREATE_TOAST, props: {
+            type: "info",
+            title: "Модерация",
+            body: "Курс отравлен в архив"
+          }
+        });
+      })
+      .catch(() => {
+        return false;
+      })
+  }
+
+  const handleUnarchiveCourse = () => {
+    apolloClient.mutate({
+      mutation: COURSE_SET_MODERATE,
+      variables: {
+        id: course.ID,
+        value: "hidden"
+      }
+    })
+      .then(({ data }) => {
+        setCourse({ ...course, status: "hidden" })
+        dispatch({
+          type: CREATE_TOAST, props: {
+            type: "success",
+            title: "Модерация",
+            body: "Курс возвращён из архива"
           }
         });
       })
@@ -233,7 +285,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
   }
 
   const handleRejectCourse = () => {
-     apolloClient.mutate({
+    apolloClient.mutate({
       mutation: COURSE_SET_MODERATE,
       variables: {
         id: course.ID,
@@ -241,7 +293,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
       }
     })
       .then(({ data }) => {
-        setCourse({...course, status: "rejected"})
+        setCourse({ ...course, status: "rejected" })
         dispatch({
           type: CREATE_TOAST, props: {
             type: "info",
@@ -267,6 +319,8 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
           }
         })
           .then(({ data }) => {
+            setCourse({...courseInfo, lessons: newOrder})
+
             if (index == changes.length - 1) {
               dispatch({
                 type: CREATE_TOAST, props: {
@@ -441,21 +495,25 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
               <Row>
                 <Col md={12} className='mb-3'>
                   <Card className="lessons shadow-custom">
-                    <Card.Header>
-                      Уроки курса
-                  </Card.Header>
-                    <ListGroup variant="flush">
-                      <DraggbleList initData={courseInfo.lessons} indexField="_lessonID" onChangeOrder={onChangeOrder} href={`/controlPanel/course/[id]/lesson/[lessonId]`} asBase={`/controlPanel/course/${courseInfo.ID}/lesson/`} />
-                    </ListGroup>
-                    <Card.Footer align='right'>
+                    <Card.Header>Уроки курса</Card.Header>
+                    {courseInfo.lessons.length > 0 ?
+                      <ListGroup variant="flush">
+                        <DraggbleList initData={courseInfo.lessons} indexField="_lessonID" onChangeOrder={onChangeOrder} href={`/controlPanel/course/[id]/lesson/[lessonId]`} asBase={`/controlPanel/course/${courseInfo.ID}/lesson/`} />
+                      </ListGroup>
+                      :
+                      <Card.Body>В курсе ещё нет уроков. Пришло время творить!</Card.Body>
+                    }
+                    <Card.Footer align='right' className='actions'>
                       <Link href='/controlPanel/course/[id]/lesson/new' as={`/controlPanel/course/${courseInfo.ID}/lesson/new`}>
-                        <Button>Создать урок</Button>
+                        <a>
+                          <HoveredBtn icon={<MdAdd size={20} />}>Создать урок</HoveredBtn>
+                        </a>
                       </Link>
                     </Card.Footer>
                   </Card>
                 </Col>
 
-                <Col md={12} className='mb-3'>
+                {/* <Col md={12} className='mb-3'>
                   <Card className="shadow-custom">
                     <Card.Header>
                       Возможности курса
@@ -464,42 +522,55 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
                       Продажа, реклама, установка собственного url, комментирование
                   </Card.Body>
                   </Card>
-                </Col>
+                </Col> */}
 
                 <Col md={12} className='mb-3'>
                   <Card className="shadow-custom">
-                    <Card.Header>Действия с курсом</Card.Header>
+                    <Card.Header>Статус курса</Card.Header>
                     <Card.Body>
+                      <div className="flex-row">
+                        {courseInfo.favorite && <div className='badge'><RiStarLine size={20} /></div>}
+                        {courseInfo.price == 0 && <div className='badge'><MdMoneyOff size={20} /></div>}
+
+                        {(courseInfo.status == "showed") && <div title='Опубликован' className='badge'><BsCheck size={20} /></div>}
+                        {(courseInfo.status != "showed") && <div title='Скрытый курс' className='badge'><BsEyeSlash size={20} /></div>}
+                        {(courseInfo.status == "moderate") && <div title='На модерации' className='badge'><AiOutlineFileSearch size={20} /></div>}
+                        {(courseInfo.status == "rejected") && <div title='Отклонён от размещения' className='badge'><MdClose size={20} /></div>}
+                        {(courseInfo.status == "archive") && <div title='В архиве' className='badge'><BsArchive size={20} /></div>}
+                      </div>
+                    </Card.Body>
+                    <Card.Footer align='right' className='actions'>
                       {courseInfo.status == 'hidden' && courseInfo.owner.ID == userInfo.ID && (
                         <>
-                          <Button block variant='primary' onClick={handleSendToModerate}>Отправить на модерацию</Button>
+                          <HoveredBtn onClick={handleSendToModerate} icon={<AiOutlineFileSearch size={20} />}>Отправить на модерацию</HoveredBtn>
                         </>
                       )}
 
-                      {courseInfo.status == 'moderate' && courseInfo.owner.ID == userInfo.ID && (
+                      {userInfo.moderator && courseInfo.status != "hidden" && courseInfo.status != "archive" && (
                         <>
-                          <Button block disabled variant='primary'>Курс на модерации</Button>
+                          {courseInfo.status != "showed" && <HoveredBtn icon={<BsCheck size={20} />} onClick={handleAcceptCourse}>Разрешить курс</HoveredBtn>}
+                          {courseInfo.status != "rejected" && <HoveredBtn icon={<MdClose size={20} />} onClick={handleRejectCourse}>Запретить курс</HoveredBtn>}
                         </>
                       )}
 
-
-                      {userInfo.moderator && courseInfo.status != "moderate" && courseInfo.owner.ID != userInfo.ID && (
+                      {courseInfo.status != 'archive' && courseInfo.owner.ID == userInfo.ID && (
                         <>
-                          Курс не на модерации
+                          <HoveredBtn onClick={handleArchiveCourse} icon={<BsArchive size={20} />}>Отправить в архив</HoveredBtn>
                         </>
                       )}
 
-                      {userInfo.moderator && courseInfo.status != "hidden" && (
+                      {courseInfo.status == 'archive' && courseInfo.owner.ID == userInfo.ID && (
                         <>
-                          {courseInfo.status != "showed" && <Button block variant='outline-primary' onClick={handleAcceptCourse}>Разрешить курс</Button>}
-                          {courseInfo.status != "rejected" && <Button block variant='outline-danger' onClick={handleRejectCourse}>Запретить курс</Button>}
+                          <HoveredBtn onClick={handleUnarchiveCourse} icon={<BsArrowReturnLeft size={20} />}>Вернуть из архива</HoveredBtn>
                         </>
                       )}
 
                       <Link href='/course/[id]' as={`/course/${courseInfo.ID}`}>
-                        <Button block variant='outline-primary'>Страница курса</Button>
+                        <a>
+                          <HoveredBtn variant='primary' icon={<IoMdOpen size={20} />}>Страница курса</HoveredBtn>
+                        </a>
                       </Link>
-                    </Card.Body>
+                    </Card.Footer>
                   </Card>
                 </Col>
               </Row>
@@ -509,14 +580,10 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
               <Row>
                 <Col md={12} className='mb-3'>
                   <Card className='shadow-custom'>
-                    <Card.Header>
-                      Статистика
-                  </Card.Header>
-                    <Card.Body>
-                      Количество учеников,
-                      прибыль по курсу
-                      и прочая полезная информация
-                  </Card.Body>
+                    <Card.Header>Статистика</Card.Header>
+                    <ListGroup variant="flush">
+                      <ListGroup.Item>Колчество учеников: {courseInfo.purchases.length}</ListGroup.Item>
+                    </ListGroup>
                   </Card>
                 </Col>
                 <Col md={12} className='mb-3'>
@@ -568,11 +635,11 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
 
 Page.getInitialProps = async (ctx) => {
   var atob = require('atob');
-  var redirect = require('../../../lib/redirect').default;
+  var redirect = require('~/lib/redirect').default;
 
   const { id } = ctx.query;
 
-  const checkLoggedIn = require('../../../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
   const b64DecodeUnicode = (str) => {

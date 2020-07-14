@@ -7,16 +7,20 @@ import { useRouter } from 'next/router'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { useSelector, useDispatch } from "react-redux";
-import ImageLoader from '../../components/imageLoader'
-import { CREATE_TOAST } from "../../redux/actions";
-import { CREATE_MODAL } from "../../redux/actions";
-
-import redirect from '../../lib/redirect'
+import ImageLoader from '~/components/imageLoader'
+import { CREATE_TOAST } from "~/redux/actions";
+import { CREATE_MODAL } from "~/redux/actions";
 
 import { withApollo } from '@apollo/react-hoc';
 
 import { Formik } from 'formik';
 import { object as yupObject, string as yupString, number as yupNumber, setLocale } from 'yup';
+
+import HoveredBtn from '~/components/hoveredBtn';
+import { MdAdd, MdAccountBalanceWallet } from 'react-icons/md';
+import { BsArchive } from 'react-icons/bs';
+import { FiCheckCircle } from 'react-icons/fi';
+
 
 setLocale({
   mixed: {
@@ -48,6 +52,7 @@ const USER_INFO = gql`
       courses{
         ID
         name
+        status
       }
     }
   }
@@ -75,6 +80,7 @@ const Page = ({ client: apolloClient, userID, user }) => {
   const dispatch = useDispatch();
 
   const [userInfo, setUser] = useState(user);
+  const [showArchive, setArchive] = useState(false);
 
   const handleSaveMain = (values) => {
     apolloClient.mutate({
@@ -261,7 +267,7 @@ const Page = ({ client: apolloClient, userID, user }) => {
               </Card>
 
 
-              <Card className="accountSettings">
+              {/* <Card className="accountSettings">
                 <Card.Header>Оповещения (Раздел в разработке)</Card.Header>
                 <Card.Body>
                   <Row>
@@ -275,7 +281,7 @@ const Page = ({ client: apolloClient, userID, user }) => {
                     </Col>
                   </Row>
                 </Card.Body>
-              </Card>
+              </Card> */}
             </Col>
             <Col md={12} lg={6}>
               <Card className="accountSettings mb-3">
@@ -284,19 +290,20 @@ const Page = ({ client: apolloClient, userID, user }) => {
                   <ListGroup.Item>
                     Баланс: {userInfo.balance} руб.
                     </ListGroup.Item>
-
-                  <ListGroup.Item>
-                    <Link href="/payments">
-                      <Button>Управление балансом</Button>
-                    </Link>
-                  </ListGroup.Item>
                 </ListGroup>
+                <Card.Footer align='right' className='actions'>
+                  <Link href="/payments">
+                    <a>
+                      <HoveredBtn icon={<MdAccountBalanceWallet size={20}/>}>Управление балансом</HoveredBtn>
+                    </a>
+                  </Link>
+                </Card.Footer>
               </Card>
 
               <Card className="accountSettings">
-                <Card.Header>Созданные курсы</Card.Header>
+                <Card.Header>{showArchive?"Архивные курсы":"Созданные курсы"}</Card.Header>
                 <ListGroup>
-                  {userInfo.courses.map(course => {
+                  {userInfo.courses.filter(el=>showArchive?el.status=="archive":el.status!='archive').map(course => {
                     return (
                       <Link key={course.ID.toString()} href='/controlPanel/course/[id]' as={`/controlPanel/course/${course.ID}`}>
                         <ListGroup.Item action>
@@ -305,12 +312,19 @@ const Page = ({ client: apolloClient, userID, user }) => {
                       </Link>
                     )
                   })}
-                  <ListGroup.Item>
-                    <Link href='/create/course'>
-                      <Button>Создать курс</Button>
-                    </Link>
-                  </ListGroup.Item>
                 </ListGroup>
+                <Card.Footer align='right' className='actions'>
+                  <Link href='/controlPanel/course/new'>
+                    <a>
+                      <HoveredBtn icon={<MdAdd size={20} />}>Создать курс</HoveredBtn>
+                    </a>
+                  </Link>
+                  { !showArchive?
+                    <HoveredBtn onClick={()=>{setArchive(true)}} icon={<BsArchive size={20} />}>Архивные курсы</HoveredBtn>
+                    :
+                    <HoveredBtn onClick={()=>{setArchive(false)}} icon={<FiCheckCircle size={20} />}>Активные курсы</HoveredBtn>
+                  }
+                </Card.Footer>
               </Card>
             </Col>
           </Row>
@@ -323,9 +337,9 @@ const Page = ({ client: apolloClient, userID, user }) => {
 
 Page.getInitialProps = async (ctx) => {
   var atob = require('atob');
-  var redirect = require('../../lib/redirect').default;
+  var redirect = require('~/lib/redirect').default;
 
-  const checkLoggedIn = require('../../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
   const b64DecodeUnicode = (str) => {

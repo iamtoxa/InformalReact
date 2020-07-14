@@ -1,3 +1,14 @@
+.badge{
+    padding: 3px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    width: 35px;
+    border-radius: 5px;
+    border: solid 3px map-get($map: $theme-colors, $key: "primary");
+}
+
 .CourseCard{
     transform-style: preserve-3d;
     perspective: 400px;
@@ -69,18 +80,6 @@
             bottom: 0;
             right: 0;
             margin: 10px;
-            > div{
-                padding: 3px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 30px;
-                width: 30px;
-                border-radius: 5px;
-                border: solid 3px map-get($map: $theme-colors, $key: "primary");
-                color: map-get($map: $theme-colors, $key: "white");
-                background: map-get($map: $theme-colors, $key: "black");
-            }
 
             > *:not(:last-child){
                 margin-right: 10px;
@@ -142,33 +141,47 @@
 }
 
 
-.theme-dark .CourseCard {
-    > div{
+.theme-dark{
+    .badge{
+        color: map-get($map: $theme-colors, $key: "white");
         background: map-get($map: $theme-colors, $key: "black");
     }
 
-    .body{
-        .title{
-            color: map-get($map: $theme-colors, $key: "white");
+    .CourseCard {
+        > div{
+            background: map-get($map: $theme-colors, $key: "black");
         }
-        .description{
-            color: map-get($map: $theme-colors, $key: "gray-5");
+    
+        .body{
+            .title{
+                color: map-get($map: $theme-colors, $key: "white");
+            }
+            .description{
+                color: map-get($map: $theme-colors, $key: "gray-5");
+            }
         }
     }
 }
 
-.theme-light .CourseCard {
-    
-    > div{
+.theme-light{
+    .badge{
+        color: map-get($map: $theme-colors, $key: "dark");
         background: map-get($map: $theme-colors, $key: "white");
     }
 
-    .body{
-        .title{
-            color: map-get($map: $theme-colors, $key: "gray-1");
+    .CourseCard {
+    
+        > div{
+            background: map-get($map: $theme-colors, $key: "white");
         }
-        .description{
-            color: map-get($map: $theme-colors, $key: "gray-2");
+    
+        .body{
+            .title{
+                color: map-get($map: $theme-colors, $key: "gray-1");
+            }
+            .description{
+                color: map-get($map: $theme-colors, $key: "gray-2");
+            }
         }
     }
 }

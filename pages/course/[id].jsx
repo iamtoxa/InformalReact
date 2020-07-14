@@ -10,10 +10,14 @@ import { gql } from 'apollo-boost';
 import { useSelector, useDispatch } from "react-redux";
 
 import { RiStarLine } from 'react-icons/ri';
-import { MdMoneyOff, MdAccountBalanceWallet } from 'react-icons/md';
-import { BsEyeSlash, BsCheckCircle } from 'react-icons/bs';
+import { MdAccountBalanceWallet, MdClose } from 'react-icons/md';
 
-import { CREATE_TOAST, CREATE_MODAL } from "../../redux/actions";
+
+import { MdMoneyOff } from 'react-icons/md';
+import { BsEyeSlash, BsArchive } from 'react-icons/bs';
+import { AiOutlineFileSearch } from 'react-icons/ai';
+
+import { CREATE_TOAST, CREATE_MODAL } from "~/redux/actions";
 import { withApollo } from '@apollo/react-hoc';
 
 const COURSE_FAVORITE = gql`
@@ -205,8 +209,11 @@ const Page = ({ client: apolloClient, course, userID, balance }) => {
               <div className="badges">
                 {couseInfo.favorite && <div className='badge'><RiStarLine size={20} /></div>}
                 {couseInfo.price == 0 && <div className='badge'><MdMoneyOff size={20} /></div>}
-                {couseInfo.status != "showed" && <div className='badge'><BsEyeSlash size={20} /></div>}
-                {couseInfo.status != "showed" && <div className='badge'><BsCheckCircle size={20} /></div>}
+
+                {(couseInfo.status != "showed") && <div title='Скрытый курс' className='badge'><BsEyeSlash size={20} /></div>}
+                {(couseInfo.status == "moderate") && <div title='На модерации' className='badge'><AiOutlineFileSearch size={20} /></div>}
+                {(couseInfo.status == "rejected") && <div title='Отклонён от размещения' className='badge'><MdClose size={20} /></div>}
+                {(couseInfo.status == "archive") && <div title='В архиве' className='badge'><BsArchive size={20} /></div>}
               </div>
               {couseInfo.price != 0 && (
                 <div className='price'>
@@ -310,11 +317,11 @@ Page.getInitialProps = async (ctx) => {
 
   const { id } = ctx.query;
 
-  const checkLoggedIn = require('../../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
 
-  const userInfo = require('../../lib/getUser').default;
+  const userInfo = require('~/lib/getUser').default;
 
   const b64DecodeUnicode = (str) => {
     return decodeURIComponent(atob(str).split('').map(function (c) {

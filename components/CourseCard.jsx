@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Spinner, Button } from 'react-bootstrap'
 import { RiStarLine } from 'react-icons/ri';
-import { MdMoneyOff } from 'react-icons/md';
-import { BsEyeSlash } from 'react-icons/bs';
+import { MdMoneyOff, MdClose } from 'react-icons/md';
+import { BsEyeSlash, BsArchive } from 'react-icons/bs';
+import { AiOutlineFileSearch } from 'react-icons/ai';
+
 import Link from 'next/link'
 
 import { withCookies } from 'react-cookie';
@@ -102,13 +104,20 @@ const CourseCard = ({data, fetch, client: apolloClient, template, cookies}) => {
         {!loading ? (
           <>
             <div className='header'>
-              <Link href='/course/[id]' as={`/course/${course.ID}`}>
+              {!template ? <Link href='/course/[id]' as={`/course/${course.ID}`}>
                 <img alt='' style={{ cursor: "pointer" }} src={course.image ? course.image : "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"} />
-              </Link>
+              </Link> : <>
+                <img alt='' src={course.image ? course.image : "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"} />
+              </>}
               <div className='badges'>
-                {course.favorite && <div className='badge'><RiStarLine size={20} /></div>}
-                {course.price == 0 && <div className='badge'><MdMoneyOff size={20} /></div>}
-                {(course.status != "showed" || template) && <div className='badge'><BsEyeSlash size={20} /></div>}
+                {course.favorite && <div title='В избранном' className='badge'><RiStarLine size={20} /></div>}
+                {course.price == 0 && <div title='Бесплатный' className='badge'><MdMoneyOff size={20} /></div>}
+
+
+                {(course.status != "showed" || template) && <div title='Скрытый курс' className='badge'><BsEyeSlash size={20} /></div>}
+                {(course.status == "moderate") && <div title='На модерации' className='badge'><AiOutlineFileSearch size={20} /></div>}
+                {(course.status == "rejected") && <div title='Отклонён от размещения' className='badge'><MdClose size={20} /></div>}
+                {(course.status == "archive") && <div title='В архиве' className='badge'><BsArchive size={20} /></div>}
               </div>
             </div>
             <div className='body'>

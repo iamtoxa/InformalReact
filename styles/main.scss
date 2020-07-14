@@ -26,6 +26,7 @@ $theme-colors: (
 @import './components/videoPlayer';
 @import './components/uploaders';
 @import './components/balance';
+@import './components/hoveredBtn';
 
 @import './pages/auth';
 @import './pages/course';
@@ -33,6 +34,27 @@ $theme-colors: (
 @import './pages/user';
 @import './pages/controlPanel';
 @import './pages/lessonEdit';
+
+.draggable{
+    cursor: pointer;
+}
+
+textarea{
+    min-height: 8em;
+}
+
+.maxHeight{
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+a{
+    text-decoration: none;
+
+    &:hover{
+        text-decoration: none; 
+    }
+}
 
 #__next-prerender-indicator{
     display: none !important;
@@ -214,6 +236,15 @@ main.no_menu {
     }
 }
 
+.flex-row{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    >*:not(:last-child){
+        margin-right: 8px;
+    }
+}
+
 .modalsPanel {
     position: fixed;
     bottom: 0;
@@ -302,7 +333,7 @@ main.no_menu {
 
 .theme-dark {
     .list-group-item {
-        background: map-get($map: $theme-colors, $key: "black");
+        background: lighten(map-get($map: $theme-colors, $key: "black"),3);
         color: map-get($map: $theme-colors, $key: "white");
     }
 
@@ -313,7 +344,7 @@ main.no_menu {
 
 .theme-light {
     .list-group-item {
-        background: map-get($map: $theme-colors, $key: "white");
+        background: darken(map-get($map: $theme-colors, $key: "white"),5);
         color: map-get($map: $theme-colors, $key: "black");
     }
 

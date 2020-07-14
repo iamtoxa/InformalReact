@@ -1,22 +1,22 @@
+import { useState, useRef } from 'react'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+
 import { Container, Button, Form, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { FaGoogle, FaVk, FaYandex } from 'react-icons/fa'
 import { MdSend, MdLockOpen } from 'react-icons/md'
-import { gql } from 'apollo-boost';
-import { useState, useRef } from 'react'
 
-import { UPDATE_ACCESS } from "../redux/actions";
+import { UPDATE_ACCESS, CREATE_TOAST } from "~/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from 'next/router'
 
-import { CREATE_TOAST } from "../redux/actions";
-import redirect from '../lib/redirect'
+import redirect from '~/lib/redirect'
 
+import { gql } from 'apollo-boost';
 import { withApollo } from '@apollo/react-hoc';
 
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-
 import { withCookies } from 'react-cookie';
+
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const EMAIL_IN = gql`
     mutation email($email: String!){
@@ -241,7 +241,7 @@ const Page = ({ client: apolloClient, cookies }) => {
 Page.getInitialProps = async (ctx) => {
   const apolloClient = ctx.apolloClient;
 
-  const checkLoggedIn = require('../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
   if (AccessToken) {

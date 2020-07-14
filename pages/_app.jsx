@@ -1,4 +1,4 @@
-import '../styles/main.scss'
+import '~/styles/main.scss'
 
 import App from 'next/app';
 import React, { useState } from 'react';
@@ -6,18 +6,18 @@ import { CookiesProvider, Cookies, withCookies, useCookies } from 'react-cookie'
 import { Provider as ReduxProvider, useSelector } from "react-redux";
 
 import dynamic from 'next/dynamic'
-import store from "../redux/store";
+import store from "~/redux/store";
 import cookie from 'cookie';
 
-import { TOGGLE_DARKTHEME, UPDATE_ACCESS } from "../redux/actions";
+import { TOGGLE_DARKTHEME, UPDATE_ACCESS } from "~/redux/actions";
 
 import withApollo from '../lib/withApollo'
 import { ApolloProvider } from '@apollo/react-hooks';
 
-import Navbar from "../components/Navbar/Navbar";
-const ToastsPanel = dynamic(() => import('../components/ToastsPanel/Panel'))
-const LoadIndicator = dynamic(() => import('../components/LoadIndicator'))
-const ModalLayer = dynamic(() => import('../components/ModalLayer'))
+import Navbar from "~/components/Navbar/Navbar";
+const ToastsPanel = dynamic(() => import('~/components/ToastsPanel/Panel'))
+const LoadIndicator = dynamic(() => import('~/components/LoadIndicator'))
+const ModalLayer = dynamic(() => import('~/components/ModalLayer'))
 
 function MyApp({ Component, pageProps, router, cookies, initialCookies, reduxStore, apolloClient }) {
   const [init, setInit] = useState(true);

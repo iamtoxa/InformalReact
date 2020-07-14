@@ -1,0 +1,42 @@
+.hoveredBtn{
+    border-radius: 5px;
+    background: map-get($map: $theme-colors, $key: "primary");
+    color: map-get($map: $theme-colors, $key: "white");
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 6px 10px;
+    cursor: pointer;
+
+    >*{
+        transition: all 0.3s ease; 
+    }
+
+    .always{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transform: scale(0.9);
+    }
+
+    .hovered{
+        white-space: nowrap;
+        word-wrap: none;
+        word-break: keep-all;
+        overflow: hidden;
+        max-width: 0;
+        padding-left: 0px;
+        opacity: 0;
+    }
+
+    &:hover{
+        .hovered{
+            max-width: 600px;
+            padding-left: 10px;
+            opacity: 1;
+        }
+        .always{
+            transform: scale(1)
+        }
+    }
+}

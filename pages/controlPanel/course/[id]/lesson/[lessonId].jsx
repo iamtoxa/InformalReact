@@ -1,15 +1,13 @@
-import Head from 'next/head'
-import { motion } from "framer-motion"
-import { Container, Button, Row, Col, Card, ListGroup, Form, Tabs, Tab, Nav, FormControl } from 'react-bootstrap'
 import React, { useState } from 'react';
+import Head from 'next/head'
+import { Container, Button, Row, Col, Card, ListGroup, Form, Nav, FormControl } from 'react-bootstrap'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
-import { useSelector, useDispatch } from "react-redux";
-import { CREATE_TOAST } from "../../../../../redux/actions";
-import { CREATE_MODAL } from "../../../../../redux/actions";
 
+import { useSelector, useDispatch } from "react-redux";
+import { CREATE_TOAST, CREATE_MODAL } from "~/redux/actions";
+
+import { gql } from 'apollo-boost';
 import { withApollo } from '@apollo/react-hoc';
 
 const ReactMarkdown = require('react-markdown')
@@ -18,6 +16,9 @@ import { Formik } from 'formik';
 import { object as yupObject, string as yupString, number as yupNumber, setLocale } from 'yup';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsPlus, BsTrash, BsCheck } from 'react-icons/bs';
+
+import HoveredBtn from '~/components/hoveredBtn';
+import { IoMdOpen, IoIosAlbums } from 'react-icons/io';
 
 setLocale({
   mixed: {
@@ -84,7 +85,14 @@ query lessonInfo($lessonID:ID!){
       title
       description
       # timer
-
+      results{
+        user{
+          ID
+          firstName
+          lastName
+        }
+        value
+      }
       tasks{
         ID
         text
@@ -189,11 +197,18 @@ mutation taskUpdate($ID: ID!, $text: String!){
 }
 `;
 
+const TEST_DROP_RESULTS = gql`
+mutation testDropResults($ID: ID!, $user: ID){
+  testDropResults(id:$ID, user: $user)
+}
+`;
+
 const TEST_REMOVE_TASK = gql`
 mutation taskDelete($ID: ID!){
   taskDelete(id:$ID)
 }
 `;
+
 
 const TEST_UPDATE_TASK_CORRECT = gql`
 mutation taskSetCorrect($ID: ID!, $value:ID!){
@@ -246,6 +261,38 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
 
   if (lessonInfo.text && lessonInfo.text != markdownText && markdownText === undefined) {
     setMarkdownText(lessonInfo.text);
+  }
+
+  const handleTestDropResult = (_userID = null) => {
+    apolloClient.mutate({
+      mutation: TEST_DROP_RESULTS,
+      variables: _userID ? {
+        ID: lessonInfo.ID,
+        user: _userID
+      } : {
+          ID: lessonInfo.ID
+        }
+    })
+      .then(({ data }) => {
+        if (_userID) {
+          setLesson({ ...lessonInfo, results: [...lessonInfo.results.filter(el => el.user.ID != _userID)] })
+        } else {
+          setLesson({ ...lessonInfo, results: [] })
+        }
+
+        dispatch({
+          type: CREATE_TOAST, props: {
+            type: "success",
+            title: "Обновление результатов",
+            body: _userID ? "Результат тестирования удалён" : "Результаты тестирования удалены"
+          }
+        });
+
+        return true;
+      })
+      .catch(() => {
+        return false;
+      })
   }
 
   const handleSaveLectionInfo = (values) => {
@@ -384,7 +431,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
-        setLesson({...lessonInfo, tasks:[...lessonInfo.tasks, data.taskCreate]})
+        setLesson({ ...lessonInfo, tasks: [...lessonInfo.tasks, data.taskCreate] })
 
         dispatch({
           type: CREATE_TOAST, props: {
@@ -435,10 +482,10 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       }
     })
       .then(({ data }) => {
-      
+
         setSelectedTask(null);
-        setLesson({...lessonInfo, tasks:[...lessonInfo.tasks.filter(el=>el.ID != deleted)]})
-        
+        setLesson({ ...lessonInfo, tasks: [...lessonInfo.tasks.filter(el => el.ID != deleted)] })
+
         dispatch({
           type: CREATE_TOAST, props: {
             type: "success",
@@ -464,9 +511,9 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
     })
       .then(({ data }) => {
         var newTasks = lessonInfo.tasks;
-        newTasks[newTasks.findIndex(el=>el.ID == selectedTask)].CorrectOption = {ID: correctID};
-        
-        setLesson({...lessonInfo, tasks: newTasks})
+        newTasks[newTasks.findIndex(el => el.ID == selectedTask)].CorrectOption = { ID: correctID };
+
+        setLesson({ ...lessonInfo, tasks: newTasks })
 
         dispatch({
           type: CREATE_TOAST, props: {
@@ -491,12 +538,12 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
     })
       .then(({ data }) => {
         var newTasks = lessonInfo.tasks;
-        var taskIndex = newTasks.findIndex(el=>el.ID == selectedTask);
+        var taskIndex = newTasks.findIndex(el => el.ID == selectedTask);
         // var optionIndex = newTasks[taskIndex].options.findIndex(el=>el.ID == optionID);
 
-        newTasks[taskIndex].options = newTasks[taskIndex].options.filter(el=>el.ID != optionID);
-        
-        setLesson({...lessonInfo, tasks: newTasks})
+        newTasks[taskIndex].options = newTasks[taskIndex].options.filter(el => el.ID != optionID);
+
+        setLesson({ ...lessonInfo, tasks: newTasks })
 
         dispatch({
           type: CREATE_TOAST, props: {
@@ -522,11 +569,11 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
     })
       .then(({ data }) => {
         var newTasks = lessonInfo.tasks;
-        var taskIndex = newTasks.findIndex(el=>el.ID == selectedTask);
+        var taskIndex = newTasks.findIndex(el => el.ID == selectedTask);
 
         newTasks[taskIndex].options = [...newTasks[taskIndex].options, data.optionCreate];
-        
-        setLesson({...lessonInfo, tasks: newTasks})
+
+        setLesson({ ...lessonInfo, tasks: newTasks })
 
         dispatch({
           type: CREATE_TOAST, props: {
@@ -547,134 +594,133 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       <title>Редактирование урока</title>
     </Head>
 
-    <motion.div transition={{ duration: 0.2, delay: 0 }} initial={{ opacity: 0, translateX: -50 }} animate={{ opacity: 1, translateX: 0 }} exit={{ opacity: 0 }} >
-      <Container className='py-3 controlPanelPage' fluid>
-        {lessonInfo && (
-          <Row>
-            <Col md={{ span: 12, order: 1 }} lg={{ span: 6, order: 1 }} xl={{ span: 3, order: 1 }}>
-              <Row>
-                <Col md={12} className='mb-3'>
-                  {lessonInfo.video && (
-                    <Card className='mb-3'>
-                      <Card.Header>Видео</Card.Header>
-                      <div className="videoPlayer">
-                        <video src={lessonInfo.video} controls />
-                      </div>
-                    </Card>
-                  )}
+    <Container className='py-3 controlPanelPage' fluid>
+      {lessonInfo && (
+        <Row>
+          <Col md={{ span: 12, order: 1 }} lg={{ span: 6, order: 1 }} xl={{ span: 3, order: 1 }}>
+            <Row>
+              <Col md={12} className='mb-3'>
+                {lessonInfo.video && (
+                  <Card className='mb-3'>
+                    <Card.Header>Видео</Card.Header>
+                    <div className="videoPlayer">
+                      <video src={lessonInfo.video} controls />
+                    </div>
+                  </Card>
+                )}
 
 
-                  {lessonInfo.__typename == 'Lection' && (
-                    <Card className="shadow-custom">
-                      <Card.Header> Основная информация</Card.Header>
-                      <Formik enableReinitialize onSubmit={handleSaveLectionInfo} validationSchema={schema} initialValues={{ ...lessonInfo }}>
-                        {({
-                          handleSubmit,
-                          handleChange,
-                          values,
-                          touched,
-                          isValid,
-                          errors,
-                          resetForm
-                        }) => (
-                            <>
-                              <Card.Body>
-                                <Form noValidate>
-                                  <Form.Row>
-                                    <Form.Group as={Col} md="12" controlId="control_title">
-                                      <Form.Label>Название урока</Form.Label>
-                                      <Form.Control
-                                        type="text"
-                                        name="title"
-                                        value={values.title}
-                                        onChange={handleChange}
-                                        isInvalid={!touched.title && errors.title}
-                                      />
-                                      <Form.Control.Feedback type='invalid'>
-                                        {errors.title}
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Form.Row>
+                {lessonInfo.__typename == 'Lection' && (
+                  <Card className="shadow-custom">
+                    <Card.Header> Основная информация</Card.Header>
+                    <Formik enableReinitialize onSubmit={handleSaveLectionInfo} validationSchema={schema} initialValues={{ ...lessonInfo }}>
+                      {({
+                        handleSubmit,
+                        handleChange,
+                        values,
+                        touched,
+                        isValid,
+                        errors,
+                        resetForm
+                      }) => (
+                          <>
+                            <Card.Body>
+                              <Form noValidate>
+                                <Form.Row>
+                                  <Form.Group as={Col} md="12" controlId="control_title">
+                                    <Form.Label>Название урока</Form.Label>
+                                    <Form.Control
+                                      type="text"
+                                      name="title"
+                                      value={values.title}
+                                      onChange={handleChange}
+                                      isInvalid={!touched.title && errors.title}
+                                    />
+                                    <Form.Control.Feedback type='invalid'>
+                                      {errors.title}
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                </Form.Row>
 
-                                  <Form.Row>
-                                    <Form.Group as={Col} md="12" controlId="control_description">
-                                      <Form.Label>Описание урока</Form.Label>
-                                      <Form.Control
-                                        as='textarea'
-                                        name="description"
-                                        value={values.description}
-                                        onChange={handleChange}
-                                        isInvalid={!touched.description && errors.description}
-                                      />
-                                      <Form.Control.Feedback type='invalid'>
-                                        {errors.description}
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Form.Row>
+                                <Form.Row>
+                                  <Form.Group as={Col} md="12" controlId="control_description">
+                                    <Form.Label>Описание урока</Form.Label>
+                                    <Form.Control
+                                      as='textarea'
+                                      name="description"
+                                      value={values.description}
+                                      onChange={handleChange}
+                                      isInvalid={!touched.description && errors.description}
+                                    />
+                                    <Form.Control.Feedback type='invalid'>
+                                      {errors.description}
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                </Form.Row>
 
 
-                                </Form>
-                              </Card.Body>
-                              <Card.Footer>
-                                <Button block disabled={!isValid} variant='primary' type="button" onClick={handleSubmit}>Сохранить</Button>
-                                <Button block variant='outline-primary' type="button" onClick={resetForm}>Вернуть к инзачальным</Button>
-                              </Card.Footer>
-                            </>
-                          )}
+                              </Form>
+                            </Card.Body>
+                            <Card.Footer>
+                              <Button block disabled={!isValid} variant='primary' type="button" onClick={handleSubmit}>Сохранить</Button>
+                              <Button block variant='outline-primary' type="button" onClick={resetForm}>Вернуть к инзачальным</Button>
+                            </Card.Footer>
+                          </>
+                        )}
 
-                      </Formik>
-                    </Card>
-                  )}
+                    </Formik>
+                  </Card>
+                )}
 
-                  {lessonInfo.__typename == 'Test' && (
-                    <Card className="shadow-custom">
-                      <Card.Header> Основная информация</Card.Header>
-                      <Formik enableReinitialize onSubmit={handleSaveTestInfo} validationSchema={schema} initialValues={{ ...lessonInfo }}>
-                        {({
-                          handleSubmit,
-                          handleChange,
-                          values,
-                          touched,
-                          isValid,
-                          errors,
-                          resetForm
-                        }) => (
-                            <>
-                              <Card.Body>
-                                <Form noValidate>
-                                  <Form.Row>
-                                    <Form.Group as={Col} md="12" controlId="control_title">
-                                      <Form.Label>Название урока</Form.Label>
-                                      <Form.Control
-                                        type="text"
-                                        name="title"
-                                        value={values.title}
-                                        onChange={handleChange}
-                                        isInvalid={!touched.title && errors.title}
-                                      />
-                                      <Form.Control.Feedback type='invalid'>
-                                        {errors.title}
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Form.Row>
+                {lessonInfo.__typename == 'Test' && (
+                  <Card className="shadow-custom">
+                    <Card.Header> Основная информация</Card.Header>
+                    <Formik enableReinitialize onSubmit={handleSaveTestInfo} validationSchema={schema} initialValues={{ ...lessonInfo }}>
+                      {({
+                        handleSubmit,
+                        handleChange,
+                        values,
+                        touched,
+                        isValid,
+                        errors,
+                        resetForm
+                      }) => (
+                          <>
+                            <Card.Body>
+                              <Form noValidate>
+                                <Form.Row>
+                                  <Form.Group as={Col} md="12" controlId="control_title">
+                                    <Form.Label>Название урока</Form.Label>
+                                    <Form.Control
+                                      type="text"
+                                      name="title"
+                                      value={values.title}
+                                      onChange={handleChange}
+                                      isInvalid={!touched.title && errors.title}
+                                    />
+                                    <Form.Control.Feedback type='invalid'>
+                                      {errors.title}
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                </Form.Row>
 
-                                  <Form.Row>
-                                    <Form.Group as={Col} md="12" controlId="control_description">
-                                      <Form.Label>Описание урока</Form.Label>
-                                      <Form.Control
-                                        as='textarea'
-                                        name="description"
-                                        value={values.description}
-                                        onChange={handleChange}
-                                        isInvalid={!touched.description && errors.description}
-                                      />
-                                      <Form.Control.Feedback type='invalid'>
-                                        {errors.description}
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Form.Row>
+                                <Form.Row>
+                                  <Form.Group as={Col} md="12" controlId="control_description">
+                                    <Form.Label>Описание урока</Form.Label>
+                                    <Form.Control
+                                      as='textarea'
+                                      name="description"
+                                      value={values.description}
+                                      onChange={handleChange}
+                                      isInvalid={!touched.description && errors.description}
+                                    />
+                                    <Form.Control.Feedback type='invalid'>
+                                      {errors.description}
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                </Form.Row>
 
-                                  {/* <Form.Row>
+                                {/* <Form.Row>
                                     <Form.Group as={Col} md="12" controlId="control_timer">
                                       <Form.Label>Таймер тестирования</Form.Label>
                                       <Form.Control
@@ -692,310 +738,336 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
                                   </Form.Row> */}
 
 
-                                </Form>
-                              </Card.Body>
-                              <Card.Footer>
-                                <Button block disabled={!isValid} variant='primary' type="button" onClick={handleSubmit}>Сохранить</Button>
-                                <Button block variant='outline-primary' type="button" onClick={resetForm}>Вернуть к инзачальным</Button>
-                              </Card.Footer>
-                            </>
+                              </Form>
+                            </Card.Body>
+                            <Card.Footer>
+                              <Button block disabled={!isValid} variant='primary' type="button" onClick={handleSubmit}>Сохранить</Button>
+                              <Button block variant='outline-primary' type="button" onClick={resetForm}>Вернуть к инзачальным</Button>
+                            </Card.Footer>
+                          </>
+                        )}
+
+                    </Formik>
+                  </Card>
+                )}
+
+              </Col>
+            </Row>
+          </Col>
+
+
+          <Col md={{ span: 12, order: 3 }} lg={{ span: 12, order: 3 }} xl={{ span: 6, order: 2 }}>
+            <Row>
+              {lessonInfo.__typename == "Lection" && (
+                <Col md={12} className='mb-3'>
+                  <Card className="lessons shadow-custom">
+                    <Card.Header>Материалы урока</Card.Header>
+
+                    <Card.Header>
+                      <Nav variant="tabs" defaultActiveKey="#first">
+                        <Nav.Item>
+                          <Nav.Link onClick={() => { setTextView('edit') }}>Редактирование</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link onClick={() => { setTextView('render') }}>Предосмотр</Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </Card.Header>
+
+                    {textView == 'edit' && (
+                      <Card.Body className='maxHeight'>
+                        <Row>
+                          <Col xs={12}>
+                            <FormControl maxLength='5000' as="textarea" placeholder="Markdown разметка" value={markdownText} onChange={(e) => { setMarkdownText(e.currentTarget.value) }} />
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    )}
+
+                    {textView == 'render' && (
+                      <Card.Body className='maxHeight'>
+
+                        {markdownText ? (
+                          <ReactMarkdown source={markdownText} />
+                        ) : (
+                            <span>Материалов урока нет</span>
                           )}
 
-                      </Formik>
-                    </Card>
-                  )}
 
+                      </Card.Body>
+                    )}
+
+                    <Card.Footer align='right' className='actions'>
+                      <HoveredBtn onClick={handleSaveLectionText} icon={<BsCheck size={20} />}>Сохранить материалы</HoveredBtn>
+                    </Card.Footer>
+                  </Card>
                 </Col>
-              </Row>
-            </Col>
+              )}
+
+              {lessonInfo.__typename == "Lection" && (
+                <Col md={12} className='mb-3'>
+                  <Card className="lessons shadow-custom">
+                    <Card.Header>Домашняя работа</Card.Header>
+                    <Card.Header>
+                      <Nav variant="tabs" defaultActiveKey="#first">
+                        <Nav.Item>
+                          <Nav.Link onClick={() => { setHomeworkView('edit') }}>Редактирование</Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link onClick={() => { setHomeworkView('render') }}>Предосмотр</Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </Card.Header>
+
+                    {homeworkView == 'edit' && (
+                      <Card.Body>
+                        <Row>
+                          <Col xs={12}>
+                            <FormControl maxLength='500' as="textarea" placeholder="Markdown разметка" value={markdownHomework} onChange={(e) => { setMarkdownHomework(e.currentTarget.value) }} />
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    )}
+
+                    {homeworkView == 'render' && (
+                      <Card.Body>
+
+                        {markdownHomework ? (
+                          <ReactMarkdown source={markdownHomework} />
+                        ) : (<span>Домашней работы нет</span>)}
 
 
-            <Col md={{ span: 12, order: 3 }} lg={{ span: 12, order: 3 }} xl={{ span: 6, order: 2 }}>
-              <Row>
-                {lessonInfo.__typename == "Lection" && (
-                  <Col md={12} className='mb-3'>
-                    <Card className="lessons shadow-custom">
-                      <Card.Header>Материалы урока</Card.Header>
+                      </Card.Body>
+                    )}
 
-                      <Card.Header>
-                        <Nav variant="tabs" defaultActiveKey="#first">
-                          <Nav.Item>
-                            <Nav.Link onClick={() => { setTextView('edit') }}>Редактирование</Nav.Link>
+                    <Card.Footer align='right' className='actions'>
+                      <HoveredBtn onClick={handleSaveLectionHomework} icon={<BsCheck size={20} />}>Сохранить задание</HoveredBtn>
+                    </Card.Footer>
+                  </Card>
+                </Col>
+              )}
+
+              {lessonInfo.__typename == "Test" && (
+                <Col md={12} className='mb-3'>
+                  <Card className="lessons shadow-custom">
+                    <Card.Header>Задания теста</Card.Header>
+                    <Card.Header>
+                      <Nav variant="tabs">
+                        {lessonInfo.tasks && lessonInfo.tasks.map((task, index) => {
+                          return <Nav.Item key={task.ID} className="task-tab">
+                            <Nav.Link onClick={() => { setSelectedTask(task.ID) }}>{index + 1}</Nav.Link>
                           </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link onClick={() => { setTextView('render') }}>Предосмотр</Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                      </Card.Header>
+                        })}
 
-                      {textView == 'edit' && (
-                        <Card.Body>
-                          <Row>
-                            <Col xs={12}>
-                              <FormControl maxLength='5000' as="textarea" placeholder="Markdown разметка" value={markdownText} onChange={(e) => { setMarkdownText(e.currentTarget.value) }} />
-                            </Col>
-                          </Row>
-                        </Card.Body>
-                      )}
-
-                      {textView == 'render' && (
-                        <Card.Body>
-
-                          {markdownText ? (
-                            <ReactMarkdown source={markdownText} />
-                          ) : (
-                              <span>Материалов урока нет</span>
-                            )}
+                        <Nav.Item className="task-tab" onClick={handleCreateTask}>
+                          <Nav.Link><BsPlus /></Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </Card.Header>
 
 
-                        </Card.Body>
-                      )}
+                    {selectedTask && (
+                      <>
+                        <Formik enableReinitialize onSubmit={handleUpdateTask} validationSchema={taskSchema} initialValues={{ ...lessonInfo.tasks.find(el => el.ID == selectedTask) }}>
+                          {({
+                            handleSubmit,
+                            handleChange,
+                            values,
+                            touched,
+                            isValid,
+                            errors,
+                            resetForm
+                          }) => (
+                              <>
+                                <Card.Body>
+                                  <Form noValidate>
+                                    <Form.Row>
+                                      <Form.Group as={Col} md="12" controlId="control_text">
+                                        <Form.Label>Текст задания</Form.Label>
+                                        <Form.Control
+                                          as='textarea'
+                                          type="text"
+                                          name="text"
+                                          value={values.text}
+                                          onChange={handleChange}
+                                          isInvalid={!touched.text && errors.text}
+                                        />
+                                        <Form.Control.Feedback type='invalid'>
+                                          {errors.text}
+                                        </Form.Control.Feedback>
+                                      </Form.Group>
+                                    </Form.Row>
+                                  </Form>
 
-                      <Card.Footer align='right'>
-                        <Button onClick={handleSaveLectionText}>Сохранить</Button>
-                      </Card.Footer>
-                    </Card>
-                  </Col>
-                )}
+                                  <Row>
+                                    <Col xs={12} align='right' className='actions'>
+                                      <HoveredBtn onClick={handleSubmit} disabled={!isValid} icon={<BsCheck size={20} />}>Сохранить текст</HoveredBtn>
+                                    </Col>
+                                  </Row>
 
-                {lessonInfo.__typename == "Lection" && (
-                  <Col md={12} className='mb-3'>
-                    <Card className="lessons shadow-custom">
-                      <Card.Header>Домашняя работа</Card.Header>
-                      <Card.Header>
-                        <Nav variant="tabs" defaultActiveKey="#first">
-                          <Nav.Item>
-                            <Nav.Link onClick={() => { setHomeworkView('edit') }}>Редактирование</Nav.Link>
-                          </Nav.Item>
-                          <Nav.Item>
-                            <Nav.Link onClick={() => { setHomeworkView('render') }}>Предосмотр</Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                      </Card.Header>
-
-                      {homeworkView == 'edit' && (
-                        <Card.Body>
-                          <Row>
-                            <Col xs={12}>
-                              <FormControl maxLength='500' as="textarea" placeholder="Markdown разметка" value={markdownHomework} onChange={(e) => { setMarkdownHomework(e.currentTarget.value) }} />
-                            </Col>
-                          </Row>
-                        </Card.Body>
-                      )}
-
-                      {homeworkView == 'render' && (
-                        <Card.Body>
-
-                          {markdownHomework ? (
-                            <ReactMarkdown source={markdownHomework} />
-                          ) : (<span>Домашней работы нет</span>)}
-
-
-                        </Card.Body>
-                      )}
-
-                      <Card.Footer align='right'>
-                        <Button onClick={handleSaveLectionHomework}>Сохранить</Button>
-                      </Card.Footer>
-                    </Card>
-                  </Col>
-                )}
-
-                {lessonInfo.__typename == "Test" && (
-                  <Col md={12} className='mb-3'>
-                    <Card className="lessons shadow-custom">
-                      <Card.Header>Задания теста</Card.Header>
-                      <Card.Header>
-                        <Nav variant="tabs">
-                          {lessonInfo.tasks && lessonInfo.tasks.map((task, index) => {
-                            return <Nav.Item key={task.ID} className="task-tab">
-                              <Nav.Link onClick={() => { setSelectedTask(task.ID) }}>{index + 1}</Nav.Link>
-                            </Nav.Item>
-                          })}
-
-                          <Nav.Item className="task-tab" onClick={handleCreateTask}>
-                            <Nav.Link><BsPlus /></Nav.Link>
-                          </Nav.Item>
-                        </Nav>
-                      </Card.Header>
-
-
-                      {selectedTask && (
-                        <>
-                          <Formik enableReinitialize onSubmit={handleUpdateTask} validationSchema={taskSchema} initialValues={{ ...lessonInfo.tasks.find(el => el.ID == selectedTask) }}>
-                            {({
-                              handleSubmit,
-                              handleChange,
-                              values,
-                              touched,
-                              isValid,
-                              errors,
-                              resetForm
-                            }) => (
-                                <>
-                                  <Card.Body>
-                                    <Form noValidate>
-                                      <Form.Row>
-                                        <Form.Group as={Col} md="12" controlId="control_text">
-                                          <Form.Label>Текст задания</Form.Label>
-                                          <Form.Control
-                                            as='textarea'
-                                            type="text"
-                                            name="text"
-                                            value={values.text}
-                                            onChange={handleChange}
-                                            isInvalid={!touched.text && errors.text}
-                                          />
-                                          <Form.Control.Feedback type='invalid'>
-                                            {errors.text}
-                                          </Form.Control.Feedback>
-                                        </Form.Group>
-                                      </Form.Row>
-                                    </Form>
-
-                                    <Row>
-                                      <Col xs={12} align='right'>
-                                        <Button disabled={!isValid} variant='outline-primary' type="button" onClick={handleSubmit}>Сохранить</Button>
-                                      </Col>
-                                    </Row>
-
-                                    <div className='mb-2'>Варианты ответов</div>
-                                    <ListGroup >
-                                      {lessonInfo.tasks.find(el => el.ID == selectedTask).options.map((option, index) => (
-                                        <ListGroup.Item key={option.ID} className='optionsList' active={lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption && option.ID == lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption.ID}>
-                                          <Row>
-                                            <Col sm={10} lg={9}>
-                                              {option.text}
-                                            </Col>
-                                            <Col sm={2} lg={3} style={{display:'flex', alignItems:"center", justifyContent: "flex-end"}}>
-                                              {lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption && option.ID != lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption.ID && (
-                                                <>
-                                                  <Button className='btn-icon mr-2' variant='outline-success' onClick={() => { handleUpdateTaskCorrect(option.ID) }}>
-                                                    <BsCheck />
-                                                  </Button>
-                                                  <Button className='btn-icon' variant='outline-danger' onClick={(e) => { handleRemoveOption(option.ID) }}>
-                                                    <BsTrash />
-                                                  </Button>
-                                                </>
-                                              )}
-
-                                              {!lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption && (
-                                                <>
-                                                  <Button className='btn-icon mr-2' variant='outline-success' onClick={() => { handleUpdateTaskCorrect(option.ID) }}>
-                                                    <BsCheck />
-                                                  </Button>
-                                                  <Button className='btn-icon' variant='outline-danger' onClick={(e) => { handleRemoveOption(option.ID) }}>
-                                                    <BsTrash />
-                                                  </Button>
-                                                </>
-                                              )}
-                                            </Col>
-                                          </Row>
-                                        </ListGroup.Item>
-                                      ))}
-
-                                      <ListGroup.Item>
+                                  <div className='mb-2'>Варианты ответов</div>
+                                  <ListGroup >
+                                    {lessonInfo.tasks.find(el => el.ID == selectedTask).options.map((option, index) => (
+                                      <ListGroup.Item key={option.ID} className='optionsList' active={lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption && option.ID == lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption.ID}>
                                         <Row>
-                                          <Col sm={10} style={{ display: "flex", alignItems: "center" }}>
-                                            <FormControl
-                                              placeholder='Добавить вариант ответа'
-                                              value={newOption}
-                                              onChange={(e) => { setNewOption(e.currentTarget.value) }}
-                                            />
+                                          <Col sm={10} lg={9}>
+                                            {option.text}
                                           </Col>
-                                          <Col sm={2} align='right' style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-                                            <Button className='btn-icon' variant='outline-primary' onClick={handleCreateOption}>
-                                              <BsPlus />
-                                            </Button>
+                                          <Col sm={2} lg={3} style={{ display: 'flex', alignItems: "center", justifyContent: "flex-end" }}>
+                                            {lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption && option.ID != lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption.ID && (
+                                              <>
+                                                <Button className='btn-icon mr-2' variant='outline-success' onClick={() => { handleUpdateTaskCorrect(option.ID) }}>
+                                                  <BsCheck />
+                                                </Button>
+                                                <Button className='btn-icon' variant='outline-danger' onClick={(e) => { handleRemoveOption(option.ID) }}>
+                                                  <BsTrash />
+                                                </Button>
+                                              </>
+                                            )}
+
+                                            {!lessonInfo.tasks.find(el => el.ID == selectedTask).CorrectOption && (
+                                              <>
+                                                <Button className='btn-icon mr-2' variant='outline-success' onClick={() => { handleUpdateTaskCorrect(option.ID) }}>
+                                                  <BsCheck />
+                                                </Button>
+                                                <Button className='btn-icon' variant='outline-danger' onClick={(e) => { handleRemoveOption(option.ID) }}>
+                                                  <BsTrash />
+                                                </Button>
+                                              </>
+                                            )}
                                           </Col>
                                         </Row>
                                       </ListGroup.Item>
+                                    ))}
 
-                                    </ListGroup>
+                                    <ListGroup.Item>
+                                      <Row>
+                                        <Col sm={10} style={{ display: "flex", alignItems: "center" }}>
+                                          <FormControl
+                                            placeholder='Добавить вариант ответа'
+                                            value={newOption}
+                                            onChange={(e) => { setNewOption(e.currentTarget.value) }}
+                                          />
+                                        </Col>
+                                        <Col sm={2} align='right' style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                                          <Button className='btn-icon' variant='outline-primary' onClick={handleCreateOption}>
+                                            <BsPlus />
+                                          </Button>
+                                        </Col>
+                                      </Row>
+                                    </ListGroup.Item>
 
-                                  </Card.Body>
-                                  <Card.Footer>
-                                    <Button block variant='outline-danger' onClick={handleRemoveTask}>Удалить задание</Button>
-                                  </Card.Footer>
-                                </>
-                              )}
+                                  </ListGroup>
 
-                          </Formik>
+                                </Card.Body>
+                                <Card.Footer align='right' className='actions'>
+                                  <HoveredBtn onClick={handleRemoveTask} icon={<BsTrash size={20} />}>Удалить задание</HoveredBtn>
+                                </Card.Footer>
+                              </>
+                            )}
 
-                        </>
-                      )}
+                        </Formik>
+
+                      </>
+                    )}
+                  </Card>
+                </Col>
+              )}
+
+              {lessonInfo.course.owner.ID == userID && (
+                <>
+                  <Col md={12} className='mb-3'>
+                    <Card className="shadow-custom">
+                      <Card.Header>Действия с уроком</Card.Header>
+                      <Card.Body align='right' className='actions'>
+                        <HoveredBtn onClick={handleLessonDelete} icon={<BsTrash size={20} />}>Удалить урок</HoveredBtn>
+                        <Link href='/controlPanel/course/[id]' as={`/controlPanel/course/${lessonInfo.course.ID}`}>
+                          <a>
+                            <HoveredBtn icon={<IoIosAlbums size={20} />}>Управление курсом</HoveredBtn>
+                          </a>
+                        </Link>
+                        <Link href='/lesson/[id]' as={`/lesson/${lessonInfo._lessonID}`}>
+                          <a>
+                            <HoveredBtn icon={<IoMdOpen size={20} />}>Страница урока</HoveredBtn>
+                          </a>
+                        </Link>
+                      </Card.Body>
                     </Card>
                   </Col>
-                )}
+                </>
+              )}
+            </Row>
+          </Col>
 
-                {lessonInfo.course.owner.ID == userID && (
-                  <>
-                    <Col md={12} className='mb-3'>
-                      <Card className="shadow-custom">
-                        <Card.Header>Действия с уроком</Card.Header>
-                        <Card.Body>
-                          <Button block variant='outline-danger' onClick={handleLessonDelete}>Удалить урок</Button>
-                          <Link href='/controlPanel/course/[id]' as={`/controlPanel/course/${lessonInfo.course.ID}`}>
-                            <Button block variant='outline-primary'>Панель управления курса</Button>
+
+          {lessonInfo.__typename == "Lection" && (
+            <Col md={{ span: 12, order: 2 }} lg={{ span: 6, order: 2 }} xl={{ span: 3, order: 3 }}>
+              <Row>
+                <Col md={12} className='mb-3'>
+                  <Card className='students shadow-custom'>
+                    <Card.Header>Комментарии</Card.Header>
+                    <ListGroup variant="flush">
+                      {lessonInfo.comments.length > 0 ? lessonInfo.comments.map((comment, index) => {
+                        return (
+                          <Link key={comment.ID} href='/user/[id]' as={`/user/${comment.user.ID}`}>
+                            <ListGroup.Item key={comment.ID} action>
+                              {comment.text}
+                            </ListGroup.Item>
                           </Link>
-                          <Link href='/lesson/[id]' as={`/lesson/${lessonInfo.ID}`}>
-                            <Button block variant='outline-primary'>Страница урока</Button>
-                          </Link>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  </>
-                )}
+                        )
+                      }) : <ListGroup.Item>Ещё никто не комментировал этот урок</ListGroup.Item>}
+                    </ListGroup>
+                  </Card>
+                </Col>
               </Row>
             </Col>
+          )}
 
-
-            {lessonInfo.__typename == "Lection" && (
-              <Col md={{ span: 12, order: 2 }} lg={{ span: 6, order: 2 }} xl={{ span: 3, order: 3 }}>
-                <Row>
-                  <Col md={12} className='mb-3'>
-                    <Card className='students shadow-custom'>
-                      <Card.Header>Комментарии</Card.Header>
-                      <ListGroup variant="flush">
-                        {lessonInfo.comments.length > 0 ? lessonInfo.comments.map((comment, index) => {
-                          return (
-                            <Link key={comment.ID} href='/user/[id]' as={`/user/${comment.user.ID}`}>
-                              <ListGroup.Item key={comment.ID} action>
-                                {comment.text}
-                              </ListGroup.Item>
-                            </Link>
-                          )
-                        }) : <ListGroup.Item>Ещё никто не комментировал этот урок</ListGroup.Item>}
-                      </ListGroup>
-                    </Card>
-                  </Col>
-                </Row>
-              </Col>
-            )}
-
-            {lessonInfo.__typename == "Test" && (
-              <Col md={{ span: 12, order: 2 }} lg={{ span: 6, order: 2 }} xl={{ span: 3, order: 3 }}>
-                <Row>
-                  <Col md={12} className='mb-3'>
-                    <Card className='students shadow-custom'>
-                      <Card.Header>Результаты (В разработке)</Card.Header>
-                      <ListGroup variant="flush">
-                        {false ? lessonInfo.comments.map((comment, index) => {
-                          return (
-                            <>
-                            </>
-                          )
-                        }) : <ListGroup.Item>Ещё никто не проходил этот тест</ListGroup.Item>}
-                      </ListGroup>
-                    </Card>
-                  </Col>
-                </Row>
-              </Col>
-            )}
-          </Row>
-        )}
-      </Container>
-    </motion.div>
+          {lessonInfo.__typename == "Test" && (
+            <Col md={{ span: 12, order: 2 }} lg={{ span: 6, order: 2 }} xl={{ span: 3, order: 3 }}>
+              <Row>
+                <Col md={12} className='mb-3'>
+                  <Card className='students shadow-custom'>
+                    <Card.Header>Результаты тестирования</Card.Header>
+                    <ListGroup variant="flush" className='maxHeight'>
+                      {lessonInfo.results.length > 0 ? lessonInfo.results.map((result, index) => {
+                        if (!result.user.firstName && !result.user.lastName) {
+                          result.user.firstName = "Анонимный"
+                          result.user.lastName = `пользователь (ID: ${result.user.ID})`
+                        }
+                        return (
+                          <>
+                            <ListGroup.Item key={result.ID}>
+                              <Row>
+                                <Col sm={10} style={{ display: "flex", alignItems: "center" }}>
+                                  <Link href='/user/[id]' as={`/user/${result.user.ID}`}>
+                                    <a>
+                                      {result.user.firstName}&nbsp;{result.user.lastName}&nbsp;({result.value})
+                                    </a>
+                                  </Link>
+                                </Col>
+                                <Col sm={2} align='right' style={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                                  <Button className='btn-icon' variant='outline-primary' onClick={(event) => { event.preventDefault(); event.stopPropagation(); handleTestDropResult(result.user.ID) }}>
+                                    <BsTrash />
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </ListGroup.Item>
+                          </>
+                        )
+                      }) : <ListGroup.Item>Ещё никто не проходил этот тест</ListGroup.Item>}
+                    </ListGroup>
+                    <Card.Footer align='right' className='actions'>
+                      <HoveredBtn onClick={() => { handleTestDropResult() }} icon={<BsTrash size={20} />}>Сбросить все результаты</HoveredBtn>
+                    </Card.Footer>
+                  </Card>
+                </Col>
+              </Row>
+            </Col>
+          )}
+        </Row>
+      )}
+    </Container>
   </>)
 
 }
@@ -1004,9 +1076,9 @@ Page.getInitialProps = async (ctx) => {
   const { id, lessonId } = ctx.query;
 
   var atob = require('atob');
-  var redirect = require('../../../../../lib/redirect').default;
+  var redirect = require('~/lib/redirect').default;
 
-  const checkLoggedIn = require('../../../../../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
   const b64DecodeUnicode = (str) => {

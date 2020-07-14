@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd'
 import { ListGroup } from 'react-bootstrap'
 import Link from 'next/link'
-
+import { MdDragHandle } from 'react-icons/md';
 
 const component = (props) => {
   const [data, setData] = useState(props.initData || [])
@@ -47,13 +47,13 @@ const component = (props) => {
                       return (<>
                         {props.href ? (
                           <Link href={props.href} as={props.asBase + item[props.indexField]}>
-                            <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                              {item.title || item.name || item.label || item.value}
+                            <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} action>
+                              <MdDragHandle size={20} className="mr-2 drag"/>{item.title || item.name || item.label || item.value}
                             </ListGroup.Item>
                           </Link>
                         ) : (
                             <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                              {item.title || item.name || item.label || item.value}
+                              <MdDragHandle size={20} className="mr-2 drag"/>{item.title || item.name || item.label || item.value}
                             </ListGroup.Item>
                           )}
                       </>)

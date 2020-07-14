@@ -3,8 +3,8 @@ import Head from 'next/head'
 import { withApollo } from '@apollo/react-hoc';
 
 import dynamic from 'next/dynamic'
-const Masonry = dynamic(() => import('../components/Masonry'))
-import CourseCard from '../components/CourseCard';
+const Masonry = dynamic(() => import('~/components/Masonry'))
+import CourseCard from '~/components/CourseCard';
 
 
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';

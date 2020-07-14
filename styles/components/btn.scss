@@ -14,3 +14,29 @@
         width: 16px;
     }
 }
+
+.theme-dark{
+    .drag{
+        color: map-get($map: $theme-colors, $key: "light");
+    }
+}
+
+
+.theme-light{
+    .drag{
+        color: map-get($map: $theme-colors, $key: "dark");
+    }
+}
+
+
+.actions{
+    display: flex;
+    >*:not(:last-child){
+        margin-right: 10px;
+    }
+
+
+    &[align='right']{
+        justify-content: flex-end;
+    }
+}

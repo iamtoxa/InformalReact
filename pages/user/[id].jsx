@@ -13,8 +13,8 @@ import { useDispatch } from "react-redux";
 import { GiFountainPen, GiOpenBook } from 'react-icons/gi';
 import { MdMoneyOff } from 'react-icons/md';
 
-import CourseCard from '../../components/CourseCard'
-import Masonry from '../../components/Masonry';
+import CourseCard from '~/components/CourseCard'
+import Masonry from '~/components/Masonry';
 import { truncate } from 'lodash';
 
 import { withApollo } from '@apollo/react-hoc';
@@ -148,11 +148,11 @@ const Page = ({ selfPage, user }) => {
 
 Page.getInitialProps = async (ctx) => {
   var atob = require('atob');
-  var redirect = require('../../lib/redirect').default;
+  var redirect = require('~/lib/redirect').default;
 
   var { id } = ctx.query;
 
-  const checkLoggedIn = require('../../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
   const b64DecodeUnicode = (str) => {

@@ -7,9 +7,9 @@ import { useRouter } from 'next/router'
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import { useSelector, useDispatch } from "react-redux";
-import VideoLoader from '../../../../../components/VideoUploader/index'
-import { CREATE_TOAST } from "../../../../../redux/actions";
-import { CREATE_MODAL } from "../../../../../redux/actions";
+import VideoLoader from '~/components/VideoUploader/index'
+import { CREATE_TOAST } from "~/redux/actions";
+import { CREATE_MODAL } from "~/redux/actions";
 import { BsCollectionPlay } from 'react-icons/bs';
 import { FaTasks } from 'react-icons/fa';
 
@@ -359,9 +359,9 @@ Page.getInitialProps = async (ctx) => {
   const { id } = ctx.query;
 
   var atob = require('atob');
-  var redirect = require('../../../../../lib/redirect').default;
+  var redirect = require('~/lib/redirect').default;
 
-  const checkLoggedIn = require('../../../../../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
   const b64DecodeUnicode = (str) => {

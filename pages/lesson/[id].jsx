@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { motion } from "framer-motion"
 import { Container, Button, Row, Col, Card, ListGroup, Form } from 'react-bootstrap'
-import Masonry from '../../components/Masonry';
+import Masonry from '~/components/Masonry';
 
 import { withApollo } from '@apollo/react-hoc';
 
@@ -17,8 +17,8 @@ import { RiStarLine } from 'react-icons/ri';
 import { MdMoneyOff } from 'react-icons/md';
 import { BsEyeSlash, BsCheckCircle, BsTrashFill } from 'react-icons/bs';
 
-import { CREATE_TOAST } from "../../redux/actions";
-import { CREATE_MODAL } from "../../redux/actions";
+import { CREATE_TOAST } from "~/redux/actions";
+import { CREATE_MODAL } from "~/redux/actions";
 
 import { Player } from 'video-react';
 
@@ -330,7 +330,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
                           {Object.entries(tasksResults).filter(([key, val]) => !!val).length / Object.entries(tasksResults).length > 0.5 ? (
                             <p>Вы успешно прошли тестирование. Поздравляем!</p>
                           ) : (
-                              <p>Вы дали слишком мало правильных ответов.. Повторите необходимый материеал и попробуйте ещё раз, у вас обязатльно получится )</p>
+                              <p>Вы дали слишком мало правильных ответов.. Рекомендуем повторить пройденный материал ещё раз.</p>
                             )}
                         </Card.Body>
                         <Card.Footer as={Row}>
@@ -506,11 +506,11 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
 
 Page.getInitialProps = async (ctx) => {
   var atob = require('atob');
-  var redirect = require('../../lib/redirect').default;
+  var redirect = require('~/lib/redirect').default;
 
   const { id } = ctx.query;
 
-  const checkLoggedIn = require('../../lib/checkLoggedIn').default;
+  const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
 
   const b64DecodeUnicode = (str) => {
