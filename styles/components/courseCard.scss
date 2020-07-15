@@ -5,7 +5,7 @@
     align-items: center;
     height: 35px;
     width: 35px;
-    border-radius: 5px;
+    border-radius: 10px;
     border: solid 3px map-get($map: $theme-colors, $key: "primary");
 }
 

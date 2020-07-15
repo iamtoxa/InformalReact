@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { DragDropContext, Droppable, Draggable, resetServerContext } from 'react-beautiful-dnd'
 import { ListGroup } from 'react-bootstrap'
 import Link from 'next/link'
-import { MdDragHandle } from 'react-icons/md';
+import { BsArrowUpDown } from 'react-icons/bs';
 
 const component = (props) => {
   const [data, setData] = useState(props.initData || [])
@@ -47,13 +47,19 @@ const component = (props) => {
                       return (<>
                         {props.href ? (
                           <Link href={props.href} as={props.asBase + item[props.indexField]}>
-                            <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} action>
-                              <MdDragHandle size={20} className="mr-2 drag"/>{item.title || item.name || item.label || item.value}
+                            <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} action className='draggbleItem'>
+                              <div className='drag'>
+                                <BsArrowUpDown size={20}/>
+                              </div>
+                              <span>{item.title || item.name || item.label || item.value}</span>
                             </ListGroup.Item>
                           </Link>
                         ) : (
-                            <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                              <MdDragHandle size={20} className="mr-2 drag"/>{item.title || item.name || item.label || item.value}
+                            <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='draggbleItem'>
+                              <div className='drag'>
+                                <BsArrowUpDown size={20}/>
+                              </div>                           
+                              <span>{item.title || item.name || item.label || item.value}</span>
                             </ListGroup.Item>
                           )}
                       </>)
@@ -61,7 +67,7 @@ const component = (props) => {
                   </Draggable>
                 )
               })}
-              {provided.placeholder}
+              <div style={{ opacity: 0 }}>{provided.placeholder}</div>
             </div>
           )}
         </Droppable>

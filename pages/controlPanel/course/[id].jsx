@@ -536,8 +536,8 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
                     <Card.Header>Статус курса</Card.Header>
                     <Card.Body>
                       <div className="flex-row">
-                        {courseInfo.favorite && <div className='badge'><RiStarLine size={20} /></div>}
-                        {courseInfo.price == 0 && <div className='badge'><MdMoneyOff size={20} /></div>}
+                        {courseInfo.favorite && <div className='badge'><RiStarLine title='В избранном' size={20} /></div>}
+                        {courseInfo.price == 0 && <div className='badge'><MdMoneyOff title='Бесплатный' size={20} /></div>}
 
                         {(courseInfo.status == "showed") && <div title='Опубликован' className='badge'><BsCheck size={20} /></div>}
                         {(courseInfo.status != "showed") && <div title='Скрытый курс' className='badge'><BsEyeSlash size={20} /></div>}

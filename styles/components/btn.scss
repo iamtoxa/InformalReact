@@ -15,8 +15,26 @@
     }
 }
 
+
+.draggbleItem{
+    display: inline-flex;
+    align-items: stretch;
+    padding: 0;
+    >span{
+        margin: 12px 20px;
+    }
+}
+.drag{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: content-box;
+    width: 30px;
+}
+
 .theme-dark{
     .drag{
+        background: lighten($color: map-get($map: $theme-colors, $key: "dark"), $amount: 6);
         color: map-get($map: $theme-colors, $key: "light");
     }
 }

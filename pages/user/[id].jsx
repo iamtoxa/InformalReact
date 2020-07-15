@@ -92,10 +92,10 @@ const Page = ({ selfPage, user }) => {
           <Card className='badges'>
             <Card.Header>Награды пользователя</Card.Header>
             <Card.Body className="content">
-              {userInfo.courses && userInfo.courses.length > 0 && (
+              {userInfo.courses && userInfo.courses.filter(el=>el.status!='archive').length > 0 && (
                 <Button className="badge" onClick={() => { setList('courses') }}>
                   <GiFountainPen className='icon' />
-                  <div className="label">Автор курсов ({userInfo.courses.length})</div>
+                  <div className="label">Автор курсов ({userInfo.courses.filter(el=>el.status!='archive').length})</div>
                 </Button>
               )}
               {userInfo.purchases && userInfo.purchases.length > 0 && (
@@ -113,7 +113,7 @@ const Page = ({ selfPage, user }) => {
         <Row className='mt-5'>
           <Col sm={12} className='masonry_wrapper'>
             <Masonry>
-              {userInfo.courses.map(course => {
+              {userInfo.courses.filter(el=>el.status!='archive').map(course => {
                 return (
                   <div key={course.ID} className='item'>
                     <CourseCard data={course} />

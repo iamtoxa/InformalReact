@@ -209,8 +209,8 @@ const Page = ({ client: apolloClient, course, userID, balance }) => {
             <div className="image">
               <img alt='' src={couseInfo.image ? couseInfo.image : "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"} />
               <div className="badges">
-                {couseInfo.favorite && <div className='badge'><RiStarLine size={20} /></div>}
-                {couseInfo.price == 0 && <div className='badge'><MdMoneyOff size={20} /></div>}
+                {couseInfo.favorite && <div className='badge'><RiStarLine size={20} title='В избранном'/></div>}
+                {couseInfo.price == 0 && <div className='badge'><MdMoneyOff size={20} title='Бесплатный'/></div>}
 
                 {(couseInfo.status != "showed") && <div title='Скрытый курс' className='badge'><BsEyeSlash size={20} /></div>}
                 {(couseInfo.status == "moderate") && <div title='На модерации' className='badge'><AiOutlineFileSearch size={20} /></div>}

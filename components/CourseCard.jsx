@@ -110,8 +110,8 @@ const CourseCard = ({data, fetch, client: apolloClient, template, cookies}) => {
                 <img alt='' src={course.image ? course.image : "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"} />
               </>}
               <div className='badges'>
-                {course.favorite && <div title='В избранном' className='badge'><RiStarLine size={20} /></div>}
-                {course.price == 0 && <div title='Бесплатный' className='badge'><MdMoneyOff size={20} /></div>}
+                {course.favorite && <div title='В избранном' className='badge'><RiStarLine size={20} title='В избранном'/></div>}
+                {course.price == 0 && <div title='Бесплатный' className='badge'><MdMoneyOff size={20} title='Бесплатный'/></div>}
 
 
                 {(course.status != "showed" || template) && <div title='Скрытый курс' className='badge'><BsEyeSlash size={20} /></div>}

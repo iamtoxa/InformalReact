@@ -78,18 +78,7 @@
                     bottom: 0;
                     right: 0;
                     margin: 10px;
-                    > div{
-                        padding: 3px;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 30px;
-                        width: 30px;
-                        border-radius: 5px;
-                        border: solid 3px map-get($map: $theme-colors, $key: "primary");
-                        color: map-get($map: $theme-colors, $key: "white");
-                        background: map-get($map: $theme-colors, $key: "black");
-                    }
+
         
                     > *:not(:last-child){
                         margin-right: 10px;
