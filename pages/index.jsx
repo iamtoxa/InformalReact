@@ -1,11 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head'
 import { withApollo } from '@apollo/react-hoc';
 
 import dynamic from 'next/dynamic'
 const Masonry = dynamic(() => import('~/components/Masonry'))
 import CourseCard from '~/components/CourseCard';
-
+import { CREATE_TOAST } from "~/redux/actions";
 
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { GoSearch  } from 'react-icons/go';
@@ -13,6 +13,8 @@ import { GoSearch  } from 'react-icons/go';
 import { gql } from 'apollo-boost';
 
 import { withCookies } from 'react-cookie';
+
+import { useDispatch } from "react-redux";
 
 const GET_COURSES = gql`
   query coursesList($limit: Int!, $start: ID, $sortBy: CourseSort, $filter: [CourseFilter]){
@@ -29,6 +31,7 @@ const GET_COURSES = gql`
 `;
 
 function Page({ cookies, categories, client: apolloClient }) {
+  const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const [init, setInit] = useState(true);
 
@@ -43,6 +46,43 @@ function Page({ cookies, categories, client: apolloClient }) {
     event.preventDefault();
     updateItems();
     console.log('update items')
+  }
+
+  const loadMore = ()=>{
+    console.log(items)
+    apolloClient.query({
+      query: GET_COURSES,
+      variables: {
+        limit: 10,
+        sortBy: sortBy.current.value != 'none' ? sortBy.current.value : undefined,
+        start: items.length > 0 ? items[items.length - 1].ID : undefined, 
+        filter: [
+          { key: "category", value: category.current.value },
+          { key: "tags", value: tags.current.value },
+          { key: "favorites", value: favorites.current.checked },
+          { key: "free", value: free.current.checked },
+          { key: "EditorsChoice", value: EditorsChoice.current.checked }]
+            .filter(el => el.value && el.value != "none" && el.value != "")
+            .map((val) => { return { key: val.key, value: val.value.toString() } })
+      }
+    })
+      .then(({ data }) => {
+        if(data.coursesList.length == 0) {
+          dispatch({
+            type: CREATE_TOAST, props: {
+              type: "info",
+              title: "Содержимое страницы",
+              body: "Больше нет курсов для загрузки. Попробуйте обновить страницу, если хотите увидеть новые."
+            }
+          });
+          return false;
+        }
+        setItems([...items, ...data.coursesList]);
+        return true
+      })
+      .catch(() => {
+        return false;
+      })
   }
 
   const updateItems = ()=>{
@@ -138,6 +178,11 @@ function Page({ cookies, categories, client: apolloClient }) {
               
             </Masonry>
           </Col>
+        </Row>
+        <Row className='mb-2 px-2'>
+          <Button as={Col} sm={{span: 8, offset:2}}  md={{span: 6, offset:3}} lg={{span: 2, offset:5}} variant='outline-primary' onClick={loadMore}>
+            Загрузить ещё
+          </Button>
         </Row>
       </Container>
     </>
