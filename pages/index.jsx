@@ -130,20 +130,25 @@ function Page({ cookies, categories, client: apolloClient }) {
           <Col sm={12} className="p-0">
             <Form className='filter' onSubmit={filterUpdate}>
               <div className='inputs'>
-                <Form.Control ref={category} as="select" name='category'>
-                  <option value='none'>Все категории</option>
-                  {categories.map(el => { return (<option value={el.ID} key={el.ID}>{el.name}</option>) })}
-                </Form.Control>
-                <Form.Control ref={sortBy} as="select" name='sortBy'>
-                  <option value='none'>Сортировать по...</option>
-                  <option value='popular'>По популярности</option>
-                  <option value='newest'>От новых к давним</option>
-                  <option value='oldest'>От давних к новым</option>
-                  <option value='priceLow'>По возрастанию цены</option>
-                  <option value='priceHigh'>По убыванию цены</option>
-                </Form.Control>
+                <div className='flex-row flex-row__mr2'>
 
-                <Form.Control ref={tags} as="input" type="text" placeholder="Тег поиска" name='tags'/>
+                  <Form.Control ref={category} as="select" name='category'>
+                    <option value='none'>Все категории</option>
+                    {categories.map(el => { return (<option value={el.ID} key={el.ID}>{el.name}</option>) })}
+                  </Form.Control>
+                  <Form.Control ref={sortBy} as="select" name='sortBy'>
+                    <option value='none'>Сортировать по...</option>
+                    <option value='popular'>По популярности</option>
+                    <option value='newest'>От новых к давним</option>
+                    <option value='oldest'>От давних к новым</option>
+                    <option value='priceLow'>По возрастанию цены</option>
+                    <option value='priceHigh'>По убыванию цены</option>
+                  </Form.Control>
+
+                  <Form.Control ref={tags} as="input" type="text" placeholder="Тег поиска" name='tags'/>
+
+                </div>
+                
 
                 <div className='group'>
                   <Form.Group controlId="freeCheckbox" className='mb-0'>
@@ -160,7 +165,7 @@ function Page({ cookies, categories, client: apolloClient }) {
                 </div>
               </div>
               <Button className='search_btn' type="submit">
-                <GoSearch size={48} className='icon' />
+                <GoSearch size={36} className='icon' />
                 <span style={{display: "none"}}>Search</span>
               </Button>
             </Form>
@@ -180,7 +185,7 @@ function Page({ cookies, categories, client: apolloClient }) {
           </Col>
         </Row>
         <Row className='mb-2 px-2'>
-          <Button as={Col} sm={{span: 8, offset:2}}  md={{span: 6, offset:3}} lg={{span: 2, offset:5}} variant='outline-primary' onClick={loadMore}>
+          <Button as={Col} sm={{span: 8, offset:2}}  md={{span: 6, offset:3}} lg={{span: 2, offset:5}} variant='outline-primary' onClick={loadMore} className='loadMoreBtn'>
             Загрузить ещё
           </Button>
         </Row>

@@ -16,12 +16,14 @@
         background: rgba($color: map-get($map: $theme-colors, $key: "primary"), $alpha: 0.3);
         color: map-get($map: $theme-colors, $key: "primary");
         border:none;
+        border-radius: 2px 0 0 2px;
 
         @include media-breakpoint-up(xl) {
-            min-height: 84px;
-            width: 84px;
+            min-height: 60px;
+            width: 60px;
         }
         @include media-breakpoint-down(lg) {
+            border-radius: 0;
             width: 100%;
             min-height: none;
             height: 50px;
@@ -40,7 +42,7 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 20px;
+        padding: 10px 20px;
         flex-wrap: wrap;
 
         .group{

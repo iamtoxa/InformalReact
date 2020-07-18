@@ -222,6 +222,11 @@ const Page = ({ client: apolloClient, course, userID, balance }) => {
                   {couseInfo.price} ₽
                 </div>
               )}
+              {couseInfo.price == 0 && (
+                <div className='price'>
+                  0.00 ₽
+                </div>
+              )}
             </div>
 
             <div className="actions">

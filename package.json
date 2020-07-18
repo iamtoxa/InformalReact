@@ -15,6 +15,7 @@
     "apollo-boost": "^0.4.9",
     "apollo-link-context": "^1.0.20",
     "atob": "^2.1.2",
+    "babel-plugin-inline-react-svg": "^1.1.1",
     "babel-plugin-root-import": "^6.5.0",
     "bootstrap": "^4.5.0",
     "cookies": "^0.8.0",
@@ -45,6 +46,7 @@
     "redux-cookie": "^0.5.9",
     "sass": "^1.26.9",
     "scrollreveal": "^4.0.6",
+    "svg-inline-loader": "^0.8.2",
     "video-react": "^0.14.1",
     "yup": "^0.29.1"
   }

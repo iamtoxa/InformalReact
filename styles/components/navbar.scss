@@ -1,3 +1,15 @@
+.brandItem{
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 0 3px #00000080;
+    background: map-get($map: $theme-colors, $key: "primary") !important;
+
+    .brandIcon{
+        width: 50%;
+        fill: currentColor;
+    }
+}
+
 .page-navbar {
     position: fixed;
     display: flex;
@@ -95,6 +107,10 @@
 .theme-dark .page-navbar {
     background: map-get($map: $theme-colors, $key: "black");
 
+
+    .brandIcon{
+        color: map-get($map: $theme-colors, $key: "white");
+    }
     .item {
         color: map-get($map: $theme-colors, $key: "gray-6");
     }
@@ -103,6 +119,10 @@
 .theme-light .page-navbar {
     background: map-get($map: $theme-colors, $key: "white");
 
+
+    .brandIcon{
+        color: map-get($map: $theme-colors, $key: "black");
+    }
     .item {
         color: map-get($map: $theme-colors, $key: "gray-1");
     }

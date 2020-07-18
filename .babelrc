@@ -1,26 +1,43 @@
 {
-    "presets": [
-      [
-        "next/babel",
-        {
-          "preset-env": {},
-          "transform-runtime": {},
-          "styled-jsx": {},
-          "class-properties": {}
-        }
-      ]
+  "presets": [
+    [
+      "next/babel",
+      {
+        "preset-env": {},
+        "transform-runtime": {},
+        "styled-jsx": {},
+        "class-properties": {}
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "babel-plugin-root-import",
+      {
+        "paths": [
+          {
+            "rootPathSuffix": "./",
+            "rootPathPrefix": "~/"
+          }
+        ]
+      }
     ],
-    "plugins": [
-      [
-        "babel-plugin-root-import",
-        {
-          "paths": [
+    [
+      "inline-react-svg",
+      {
+        "svgo": {
+          "plugins": [
             {
-              "rootPathSuffix": "./",
-              "rootPathPrefix": "~/"
+              "removeAttrs": {
+                "attrs": "(data-name)"
+              }
+            },
+            {
+              "cleanupIDs": true
             }
           ]
         }
-      ]
+      }
     ]
-  }
+  ]
+}

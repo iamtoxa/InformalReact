@@ -35,6 +35,7 @@ $theme-colors: (
 @import './pages/controlPanel';
 @import './pages/lessonEdit';
 
+
 .draggable{
     cursor: pointer;
 }
@@ -242,6 +243,12 @@ main.no_menu {
     justify-content: flex-start;
     >*:not(:last-child){
         margin-right: 8px;
+    }
+
+    &.flex-row__mr2{
+        >*:not(:last-child){
+            margin-right: 16px;
+        }
     }
 }
 

@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { TOGGLE_DARKTHEME, DELETE_AUCH } from "../../redux/actions";
 import { withCookies } from 'react-cookie';
 
+import BrandIcon from '~/components/Icons/brand-1.svg';
 
 const Item = (props) => {
   const router = useRouter()
@@ -34,6 +35,14 @@ const Item = (props) => {
       <div onClick={props.onClick} className={className}>
         {React.cloneElement(props.children,{className: 'icon'})}
       </div>
+    )
+  } else if(props.brand){
+    return (
+      <Link href={'/'}>
+        <a className={className+` brandItem d-none d-lg-flex`} style={{height: 60}}>
+          {React.cloneElement(props.children,{className: 'icon brandIcon'})}
+        </a>
+      </Link>
     )
   }
 }
@@ -66,6 +75,7 @@ const Navbar = (props) => {
 
   return (<>
     <div className={className}>
+      <Item brand className='item brand'><BrandIcon/></Item>
       <Item className='item' href="/"><RiHome2Line size={36} /></Item>
 
       {!props.cookies.get('accessToken') && <Item className='item' href="/login"><RiLoginBoxLine size={36} /></Item>}

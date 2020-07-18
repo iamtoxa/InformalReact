@@ -58,3 +58,24 @@
         justify-content: flex-end;
     }
 }
+
+.theme-light {
+    .loadMoreBtn {
+        @extend .btn-outline-black;
+    }
+}
+
+
+.theme-dark {
+    .loadMoreBtn {
+        @extend .btn-outline-white;
+    }
+}
+
+.theme-dark, .theme-light{
+    .loadMoreBtn:hover {
+        background: map-get($map: $theme-colors, $key: "primary");
+        border-color: map-get($map: $theme-colors, $key: "primary");
+        color: map-get($map: $theme-colors, $key: "white");
+    }
+}
