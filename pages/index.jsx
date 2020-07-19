@@ -58,7 +58,7 @@ function Page({ cookies, categories, client: apolloClient }) {
         start: items.length > 0 ? items[items.length - 1].ID : undefined, 
         filter: [
           { key: "category", value: category.current.value },
-          { key: "tag", value: tags.current.value },
+          { key: "tag", value: tags.current.value ? tags.current.value.toLowerCase() : undefined },
           { key: "favorites", value: favorites.current.checked },
           { key: "free", value: free.current.checked },
           { key: "EditorsChoice", value: EditorsChoice.current.checked }]
@@ -93,7 +93,7 @@ function Page({ cookies, categories, client: apolloClient }) {
         sortBy: sortBy.current.value != 'none' ? sortBy.current.value : undefined,
         filter: [
           { key: "category", value: category.current.value },
-          { key: "tag", value: tags.current.value },
+          { key: "tag", value: tags.current.value ? tags.current.value.toLowerCase() : undefined },
           { key: "favorites", value: favorites.current.checked },
           { key: "free", value: free.current.checked },
           { key: "EditorsChoice", value: EditorsChoice.current.checked }]
