@@ -40,7 +40,8 @@ let schema = yupObject({
   name: yupString().required().min(5).max(50),
   short: yupString().required().min(10).max(250),
   description: yupString().required().min(10).max(500),
-  price: yupNumber()
+  price: yupNumber(),
+  tags: yupString().max(50)
 }).defined();
 
 
@@ -69,8 +70,8 @@ query{
 `;
 
 const COURSE_UPDATE = gql`
-    mutation courseUpdate($id: ID!, $name: String!, $short: String!, $description: String!, $categoryID: ID!, $image: String!, $price: Int!){
-      courseUpdate(id: $id, info:{name: $name, short: $short, description: $description, _categoryID: $categoryID, image: $image, price: $price}){
+    mutation courseUpdate($id: ID!, $name: String!, $short: String!, $description: String!, $categoryID: ID!, $image: String!, $price: Int!, $tags: [String]){
+      courseUpdate(id: $id, info:{name: $name, short: $short, description: $description, _categoryID: $categoryID, image: $image, price: $price, tags: $tags}){
         ID
       }
     }
@@ -98,6 +99,7 @@ query courseInfo($id: ID!) {
     description
     image
     status
+    tags
     category {
       ID
     }
@@ -167,6 +169,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
         name: values.name,
         short: values.short,
         description: values.description,
+        tags: values.tags.split(',').map(el=>el.trim().toLowerCase()),
         categoryID: values.category.ID || values.category,
         image: image,
         price: Number(values.price)
@@ -478,6 +481,21 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
                                     </Form.Control>
                                     <Form.Control.Feedback type='invalid'>
                                       {errors.category}
+                                    </Form.Control.Feedback>
+                                  </Form.Group>
+                                </Form.Row>
+
+                                <Form.Row>
+                                  <Form.Group as={Col} md="12" controlId="control_tags">
+                                    <Form.Label>Теги поиска (через запятую)</Form.Label>
+                                    <Form.Control
+                                      name="tags"
+                                      value={values.tags}
+                                      onChange={handleChange}
+                                      isInvalid={!touched.tags && errors.tags}
+                                    />
+                                    <Form.Control.Feedback type='invalid'>
+                                      {errors.tags}
                                     </Form.Control.Feedback>
                                   </Form.Group>
                                 </Form.Row>
