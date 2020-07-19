@@ -55,7 +55,7 @@ const Navbar = (props) => {
   }
 
   let className='page-navbar';
-  if(burger){
+  if(burger && props.cookies.get('accessToken')){
     className += " opened"
   }
 
@@ -82,7 +82,7 @@ const Navbar = (props) => {
       {props.cookies.get('accessToken') && <Item className='item' href="/user/[id]" as="/user/me"><RiUser2Line size={36} /></Item>}
 
       {props.cookies.get('accessToken') && <Item className='item' href="/controlPanel"><RiSettings4Line size={36} /></Item>}
-      <Item className='item d-md-none' onClick={toggleBurger} active={burger}><RiMoreLine size={36} /></Item>
+      {props.cookies.get('accessToken') && <Item className='item d-md-none' onClick={toggleBurger} active={burger}><RiMoreLine size={36} /></Item>}
       
       <Item className='item' onClick={handleToggleDrakmode} active={props.darkThemeEnabled}><RiMoonLine size={36} /></Item>
 
