@@ -63,6 +63,8 @@ const CourseCard = ({data, fetch, client: apolloClient, template, cookies}) => {
     })
       .then(({ data }) => {
         setCourse({...course, favorite: !course.favorite});
+
+        apolloClient.resetStore();
         
         if(!course.favorite){
           dispatch({
