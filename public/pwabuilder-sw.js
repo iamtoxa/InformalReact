@@ -34,11 +34,11 @@ workbox.loadModule('workbox-cacheable-response');
 workbox.loadModule('workbox-range-requests');
 
 workbox.routing.registerRoute(
-  /.*\.(css|jpg|png|jpeg|svg)/,
+  /.*\.(gif|css|jpg|png|jpeg|svg)/,
   new workbox.strategies.CacheFirst({
     cacheName: CACHE,
     plugins: [
-      new workbox.cacheableResponse.CacheableResponsePlugin({statuses: [200, 206]}),
+      new workbox.cacheableResponse.CacheableResponsePlugin({statuses: [200]}),
       new workbox.rangeRequests.RangeRequestsPlugin(),
     ],
   }),
