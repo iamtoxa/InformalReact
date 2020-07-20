@@ -20,7 +20,7 @@ import { BsEyeSlash, BsCheckCircle, BsTrashFill } from 'react-icons/bs';
 import { CREATE_TOAST } from "~/redux/actions";
 import { CREATE_MODAL } from "~/redux/actions";
 
-import { Player } from 'video-react';
+import ReactPlayer from 'react-player'
 
 import { Formik } from 'formik';
 import { object as yupObject, string as yupString, number as yupNumber, setLocale } from 'yup';
@@ -396,9 +396,10 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
                 <Row>
                   <Col xl={9} className='px-0'>
                     <div className='videoPlayer'>
-                      <Player className="video" ref={(video1) => { videoPlayer.current = video1; }}>
+                      <ReactPlayer pip url={lessonInfo.video} className='react-player' width='100%' height='100%' controls/>
+                      {/* <Player className="video" ref={(video1) => { videoPlayer.current = video1; }}>
                         <source src={lessonInfo.video} />
-                      </Player>
+                      </Player> */}
                     </div>
 
                   </Col>

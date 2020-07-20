@@ -383,7 +383,7 @@ const Page = ({ client: apolloClient, user, course, categories }) => {
                 <Col md={12} className='mb-3'>
                   <Card className="shadow-custom">
                     <Card.Header> Основная информация</Card.Header>
-                    <Formik enableReinitialize onSubmit={handleSaveCourseInfo} validationSchema={schema} initialValues={{ ...courseInfo, image: image }}>
+                    <Formik enableReinitialize onSubmit={handleSaveCourseInfo} validationSchema={schema} initialValues={{ ...courseInfo, image: image, tags: courseInfo.tags.join(', ') }}>
                       {({
                         handleSubmit,
                         handleChange,
