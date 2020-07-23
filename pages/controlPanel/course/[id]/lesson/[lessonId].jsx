@@ -614,7 +614,8 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
                   <Card className='mb-3'>
                     <Card.Header>Видео</Card.Header>
                     <div className="videoPlayer">
-                      <video src={lessonInfo.video} controls />
+                      <ReactPlayer url={lessonInfo.video} className='react-player' width='100%' height='100%' controls/>
+                      {/* <video src={lessonInfo.video} controls /> */}
                     </div>
                   </Card>
                 )}

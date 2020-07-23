@@ -31,7 +31,6 @@ self.addEventListener("message", (event) => {
 });
 
 workbox.loadModule('workbox-cacheable-response');
-workbox.loadModule('workbox-range-requests');
 
 workbox.routing.registerRoute(
   /.*\.(gif|css|jpg|png|jpeg|svg)/,

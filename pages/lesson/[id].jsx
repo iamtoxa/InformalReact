@@ -64,6 +64,7 @@ query lessonInfo($lessonID:ID!){
     }
     course{
       ID
+      image
       name
       lessons{
         _lessonID
@@ -396,7 +397,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
                 <Row>
                   <Col xl={9} className='px-0'>
                     <div className='videoPlayer'>
-                      <ReactPlayer pip url={lessonInfo.video} className='react-player' width='100%' height='100%' controls/>
+                      <ReactPlayer url={lessonInfo.video} className='react-player' width='100%' height='100%' controls/>
                       {/* <Player className="video" ref={(video1) => { videoPlayer.current = video1; }}>
                         <source src={lessonInfo.video} />
                       </Player> */}
