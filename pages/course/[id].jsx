@@ -235,7 +235,7 @@ const Page = ({ client: apolloClient, course, userID, balance }) => {
                 {couseInfo.owner.ID != userID && couseInfo.price == 0 && !couseInfo.owned && <Button onClick={handleBuy}>Начать изучение</Button>}
                 {couseInfo.owner.ID != userID && couseInfo.price != 0 && !couseInfo.owned && <Button onClick={handleBuy}>Приобрести курс</Button>}
                 {couseInfo.owned && couseInfo.owner.ID != userID && <Button disabled variant='outline-primary'>Уже приобретен</Button>}
-                {userID && couseInfo.owner.ID == userID && <Button disabled variant='outline-primary'>Вы владелец курса</Button>}
+                {userID && couseInfo.owner.ID == userID && <Link href='/controlPanel/course/[id]' as={`/controlPanel/course/${couseInfo.ID}`}><Button variant='outline-primary'>Редактировать курс</Button></Link>}
               </>)}
               {!userID && (<>
                 <Link href='/login'>
