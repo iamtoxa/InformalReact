@@ -360,6 +360,10 @@ main.no_menu {
     }
 }
 
+.card {
+    width: 100%;
+}
+
 .theme-dark {
     .card {
         background: map-get($map: $theme-colors, $key: "black");
