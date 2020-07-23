@@ -19,6 +19,7 @@ import { BsPlus, BsTrash, BsCheck } from 'react-icons/bs';
 
 import HoveredBtn from '~/components/hoveredBtn';
 import { IoMdOpen, IoIosAlbums } from 'react-icons/io';
+import ReactPlayer from 'react-player'
 
 setLocale({
   mixed: {
