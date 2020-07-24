@@ -52,6 +52,65 @@
         height: auto
     }
 
+    .footer{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        padding-top: 0;
+
+        .price{
+            margin-left: -10px;
+            margin-bottom: -10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            overflow: hidden;
+            >*{
+                white-space: nowrap;
+            }
+
+            span{
+                background: map-get($map: $theme-colors, $key: "primary");
+                padding: 5px 10px;
+                color: map-get($map: $theme-colors, $key: "white");
+                border-radius: 0 10px 0 0;
+                min-width: 100px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                @include media-breakpoint-down(md) {
+                    padding: 4px 8px;
+                    font-size: 14px;
+                    min-width: 80px;
+                }
+            }
+
+            .price--old{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 2px 8px;
+                margin: 0;
+                text-decoration: line-through;
+                font-size: 11px;
+                left: 0;
+                width: 100%;
+
+                @include media-breakpoint-down(md) {
+                    padding: 0 6px;
+                }
+            }
+        }
+
+        .actions{
+            align-items: center;
+        }
+    }
+
     .header{
         position: relative;
         height: calc(400px/1.5);
@@ -95,6 +154,7 @@
         flex: 1;
         @include media-breakpoint-down(md) {
             padding: 10px;
+            padding-bottom: 20px;
         }
         .title{
             display: block;
@@ -152,6 +212,11 @@
             background: map-get($map: $theme-colors, $key: "black");
         }
     
+        .price--old{
+            background: map-get($map: $theme-colors, $key: "gray-2");
+            color: map-get($map: $theme-colors, $key: "gray-4");
+        }
+
         .body{
             .title{
                 color: map-get($map: $theme-colors, $key: "white");
@@ -170,6 +235,11 @@
     }
 
     .CourseCard {
+
+        .price--old{
+            background: map-get($map: $theme-colors, $key: "gray-5");
+            color: map-get($map: $theme-colors, $key: "gray-3");
+        }
     
         > div{
             background: map-get($map: $theme-colors, $key: "white");

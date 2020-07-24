@@ -245,6 +245,14 @@ main.no_menu {
         margin-right: 8px;
     }
 
+    &.flex-row__stretch{
+        align-items: stretch;
+    }
+    &.flex-row__mr0{
+        >*:not(:last-child){
+            margin-right: 0;
+        }
+    }
     &.flex-row__mr2{
         >*:not(:last-child){
             margin-right: 16px;

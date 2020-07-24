@@ -46,14 +46,16 @@ const component = (props) => {
                     {(provided) => {
                       return (<>
                         {props.href ? (
-                          <Link href={props.href} as={props.asBase + item[props.indexField]}>
-                            <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} action className='draggbleItem'>
-                              <div className='drag'>
-                                <BsArrowUpDown size={20}/>
-                              </div>
-                              <span>{item.title || item.name || item.label || item.value}</span>
-                            </ListGroup.Item>
-                          </Link>
+                          <div className='flex-row flex-row__mr0 flex-row__stretch' {...provided.draggableProps}>
+                            <div className='drag' {...provided.dragHandleProps}>
+                              <BsArrowUpDown size={20}/>
+                            </div>
+                            <Link href={props.href} as={props.asBase + item[props.indexField]}>
+                              <ListGroup.Item ref={provided.innerRef} action className='draggbleItem'>
+                                <span>{item.title || item.name || item.label || item.value}</span>
+                              </ListGroup.Item>
+                            </Link>
+                          </div>
                         ) : (
                             <ListGroup.Item {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className='draggbleItem'>
                               <div className='drag'>

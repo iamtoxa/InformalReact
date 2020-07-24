@@ -31,19 +31,29 @@
     box-sizing: content-box;
     width: 40px;
     min-width: 40px;
+
+    border-width: 1px;
+    border-style: solid;
+    *{
+        user-select: none;
+        pointer-events: none;
+    }
 }
 
 .theme-dark{
     .drag{
         background: lighten($color: map-get($map: $theme-colors, $key: "dark"), $amount: 6);
         color: map-get($map: $theme-colors, $key: "light");
+        border-color: map-get($map: $theme-colors, $key: "gray-1");
     }
 }
 
 
 .theme-light{
     .drag{
+        background: lighten($color: map-get($map: $theme-colors, $key: "light"), $amount: 6);
         color: map-get($map: $theme-colors, $key: "dark");
+        border-color: map-get($map: $theme-colors, $key: "gray-4");
     }
 }
 

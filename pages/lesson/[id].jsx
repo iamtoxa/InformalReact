@@ -214,7 +214,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
     })
       .then(({ data }) => {
         apolloClient.resetStore();
-        setLesson({ ...lessonInfo, comments: lessonInfo.comments.filter(el=>el.ID != id) })
+        setLesson({ ...lessonInfo, comments: lessonInfo.comments.filter(el => el.ID != id) })
         return true;
       })
       .catch(() => {
@@ -397,7 +397,20 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
                 <Row>
                   <Col xl={9} className='px-0'>
                     <div className='videoPlayer'>
-                      <ReactPlayer url={lessonInfo.video} className='react-player' width='100%' height='100%' controls/>
+
+                      <ReactPlayer url={lessonInfo.video} className='react-player' width='100%' height='100%' controls
+                      config={{
+                        youtube: {
+                          playerVars: {
+                            autoplay: 0,
+                            modestbranding: 1,
+                            enablejsapi: 1,
+                            rel: 0
+                          }
+                        }
+                      }}/>
+
+
                       {/* <Player className="video" ref={(video1) => { videoPlayer.current = video1; }}>
                         <source src={lessonInfo.video} />
                       </Player> */}
@@ -526,7 +539,7 @@ Page.getInitialProps = async (ctx) => {
 
   const userID = AccessToken ? JSON.parse(b64DecodeUnicode(AccessToken.split('.')[1])).userId : false;
 
-  if(!userID){
+  if (!userID) {
     redirect(ctx, '/login')
     return {};
   }

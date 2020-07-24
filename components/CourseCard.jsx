@@ -125,15 +125,22 @@ const CourseCard = ({data, fetch, client: apolloClient, template, cookies}) => {
             <div className='body'>
               <h2 className={`title ${!course.name && "skeleton"}`}>{course.name}</h2>
               <p className={`description ${!course.short && "skeleton"}`}>{course.short}</p>
-              {!template && (
+            </div>
+            
+            {!template && (
+              <div className="footer">
+                <div className="price">
+                  <span>{course.price} ₽</span>
+                  {course.oldprice && course.oldprice > course.price && <div className="price--old">{course.oldprice} ₽</div>}
+                </div>
                 <div className='actions'>
                   {cookies.get('accessToken') && <Button size='sm' className="btn-icon" onClick={favoriteToggle}><RiStarLine size={18} /></Button>}
                   <Link href='/course/[id]' as={`/course/${course.ID}`}>
                     <Button size='sm'>Подробнее</Button>
                   </Link>
                 </div>
+              </div>
               )}
-            </div>
           </>
         ) : (
             <>
@@ -147,9 +154,11 @@ const CourseCard = ({data, fetch, client: apolloClient, template, cookies}) => {
               <div className='body'>
                 <h2 className='title skeleton'></h2>
                 <p className='description skeleton'></p>
-                <div className='actions'>
-                  <Button size='sm'>Loading...</Button>
-                </div>
+              </div>
+
+              <div className="footer">
+                <div className="price"></div>
+                <Button size='sm'>Loading...</Button>
               </div>
             </>
           )}
