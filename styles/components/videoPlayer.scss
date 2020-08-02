@@ -30,6 +30,28 @@
     left: 0;
 }
 
+.videoPlayer-error{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16pt;
+    background: rgba($color: #000000, $alpha: 0.8);
+    color: map-get($map: $theme-colors, $key: "white");
+    text-align: center;
+    padding: 10px;
+    .small{
+        font-size: 12pt;
+        color: map-get($map: $theme-colors, $key: "gray-3");
+    }
+}
+
 
 .theme-dark .videoPlayer {
     background: map-get($map: $theme-colors, $key: "black");

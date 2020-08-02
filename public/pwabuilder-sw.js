@@ -30,17 +30,17 @@ self.addEventListener("message", (event) => {
   }
 });
 
-workbox.loadModule('workbox-cacheable-response');
+// workbox.loadModule('workbox-cacheable-response');
 
-workbox.routing.registerRoute(
-  /.*\.(gif|css|jpg|png|jpeg|svg)/,
-  new workbox.strategies.CacheFirst({
-    cacheName: CACHE,
-    plugins: [
-      new workbox.cacheableResponse.CacheableResponsePlugin({statuses: [200]})
-    ],
-  }),
-);
+// workbox.routing.registerRoute(
+//   /.*\.(gif|css|jpg|png|jpeg|svg)/,
+//   new workbox.strategies.CacheFirst({
+//     cacheName: CACHE,
+//     plugins: [
+//       new workbox.cacheableResponse.CacheableResponsePlugin({statuses: [200]})
+//     ],
+//   }),
+// );
 
 
 

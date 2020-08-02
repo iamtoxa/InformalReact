@@ -38,12 +38,12 @@ class MyDocument extends Document {
           <meta name="imagemode" content="focrce" />
           <meta name="screen-orientation" content="portrait" />
 
-          <script type="module" dangerouslySetInnerHTML={{__html:`
+          {/* <script type="module" dangerouslySetInnerHTML={{__html:`
             import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
 
             const el = document.createElement('pwa-update');
             document.body.appendChild(el);
-          `}}/>
+          `}}/> */}
            
         </Head>
         <body>

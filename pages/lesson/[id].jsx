@@ -135,9 +135,14 @@ const TEST_CHECK_RESULTS = gql`
   }
 `;
 
-const Page = ({ userID, lesson, client: apolloClient }) => {
+const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
   const dispatch = useDispatch();
   const [lessonInfo, setLesson] = useState(lesson);
+
+  const [codeVideo, setCodeVideo] = useState(videoCode);
+  
+
+
 
   const router = useRouter()
   const videoPlayer = useRef();
@@ -220,6 +225,10 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       .catch(() => {
         return false;
       })
+  }
+
+  const playerError = (...args)=>{
+    console.log(args)
   }
 
 
@@ -397,23 +406,15 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
                 <Row>
                   <Col xl={9} className='px-0'>
                     <div className='videoPlayer'>
-
-                      <ReactPlayer url={lessonInfo.video} className='react-player' width='100%' height='100%' controls
-                      config={{
-                        youtube: {
-                          playerVars: {
-                            autoplay: 0,
-                            modestbranding: 1,
-                            enablejsapi: 1,
-                            rel: 0
-                          }
-                        }
-                      }}/>
-
-
-                      {/* <Player className="video" ref={(video1) => { videoPlayer.current = video1; }}>
-                        <source src={lessonInfo.video} />
-                      </Player> */}
+                      {codeVideo == 416 && <ReactPlayer onError={playerError} url={`https://storage.informalplace.ru/ytvideo/${lessonInfo.video.split('/').reverse()[0].split('=')[1]}`} className='react-player' width='100%' height='100%' controls/>}
+                      {codeVideo == 418 && <div className='videoPlayer-error'>
+                        <span className='main'>Возможно видео ещё обрабатывается.</span>
+                        <span className='small'>В случае явной неисправности обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
+                      </div>}
+                      {codeVideo == 403 && <div className='videoPlayer-error'>
+                        <span className='main'>Доступ к ролику ограничен.</span>
+                        <span className='small'>Обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
+                      </div>}
                     </div>
 
                   </Col>
@@ -525,6 +526,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
 Page.getInitialProps = async (ctx) => {
   var atob = require('atob');
   var redirect = require('~/lib/redirect').default;
+  const axios = require('axios').default;
 
   const { id } = ctx.query;
 
@@ -557,8 +559,18 @@ Page.getInitialProps = async (ctx) => {
       return false;
     })
 
+    var videoCode;
+    await axios.get(`https://storage.informalplace.ru/ytvideo/${lessonInfo.video.split('/').reverse()[0].split('=')[1]}`)
+    .then(function (response) {
+      console.log(response);
+      videoCode = response.status;
+    })
+    .catch(function (error) {
+      videoCode = error.response.status;
+    })
+
   return {
-    pageId: id, userID, lesson: lessonInfo
+    pageId: id, userID, lesson: lessonInfo, videoCode
   }
 };
 
