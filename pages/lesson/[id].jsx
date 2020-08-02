@@ -412,9 +412,14 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
                         <span className='small'>В случае явной неисправности обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
                       </div>}
                       {codeVideo == 403 && <div className='videoPlayer-error'>
-                        <span className='main'>Доступ к ролику ограничен.</span>
+                        <span className='main'>Доступ к видео ограничен.</span>
                         <span className='small'>Обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
                       </div>}
+                      {codeVideo == 400 && <div className='videoPlayer-error'>
+                        <span className='main'>Ошибка запроса.</span>
+                        <span className='small'>Обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
+                      </div>}
+                      
                     </div>
 
                   </Col>
