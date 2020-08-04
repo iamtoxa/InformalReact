@@ -8,6 +8,11 @@
     padding: 6px 10px;
     cursor: pointer;
 
+    &.hoveredBtn--disabled{
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
     >*{
         transition: all 0.3s ease; 
     }

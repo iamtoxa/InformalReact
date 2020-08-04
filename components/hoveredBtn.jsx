@@ -3,7 +3,7 @@ import React from 'react';
 const Component = (props) => {
 
     return (
-            <div className='hoveredBtn' onClick={props.onClick}>
+            <div className={`hoveredBtn ${props.disabled?"hoveredBtn--disabled":""}`} onClick={props.onClick}>
                 <div className="always">
                     {props.icon || props.label}
                 </div>

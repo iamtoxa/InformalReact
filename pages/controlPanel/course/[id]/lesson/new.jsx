@@ -10,12 +10,13 @@ import { useSelector, useDispatch } from "react-redux";
 import VideoLoader from '~/components/VideoUploader/index'
 import { CREATE_TOAST } from "~/redux/actions";
 import { CREATE_MODAL } from "~/redux/actions";
-import { BsCollectionPlay } from 'react-icons/bs';
+import { BsCollectionPlay, BsCheck } from 'react-icons/bs';
 import { FaTasks } from 'react-icons/fa';
 
 import { Formik } from 'formik';
 import { object as yupObject, string as yupString, number as yupNumber, setLocale } from 'yup';
 import { withApollo } from '@apollo/react-hoc';
+import HoveredBtn from '~/components/hoveredBtn';
 
 setLocale({
   mixed: {
@@ -81,7 +82,7 @@ const Page = ({ courseId, userID, client: apolloClient }) => {
   const router = useRouter()
   const dispatch = useDispatch();
 
-  const [video, setVideo] = useState();
+  const [video, setVideo] = useState(null);
   const [type, setType] = useState();
   
   const handlePublishLection = (values) => {
@@ -219,6 +220,7 @@ const Page = ({ courseId, userID, client: apolloClient }) => {
                                         value={values.title}
                                         onChange={handleChange}
                                         isInvalid={!touched.title && errors.title}
+                                        required
                                       />
                                       <Form.Control.Feedback type='invalid'>
                                         {errors.title}
@@ -235,6 +237,7 @@ const Page = ({ courseId, userID, client: apolloClient }) => {
                                         value={values.description}
                                         onChange={handleChange}
                                         isInvalid={!touched.description && errors.description}
+                                        required
                                       />
                                       <Form.Control.Feedback type='invalid'>
                                         {errors.description}
@@ -246,13 +249,8 @@ const Page = ({ courseId, userID, client: apolloClient }) => {
                               </Col>
                             </Row>
                           </Card.Body>
-                          <Card.Footer align='right'>
-                            <Row>
-                              <Col xs={12} align='right'>
-                                <Button variant='outline-primary' type="button" onClick={resetForm} className='mr-3'>Вернуть к инзачальным</Button>
-                                <Button type="button" onClick={handleSubmit}>Создать урок</Button>
-                              </Col>
-                            </Row>
+                          <Card.Footer align='right' className='actions'>
+                            <HoveredBtn disabled={video == null || values.title == "" || !isValid} type="button" onClick={handleSubmit} icon={<BsCheck size={20} />}>Создать урок</HoveredBtn>
                           </Card.Footer>
                         </>)}
                   </Formik>
@@ -336,13 +334,8 @@ const Page = ({ courseId, userID, client: apolloClient }) => {
                               </Col>
                             </Row>
                           </Card.Body>
-                          <Card.Footer align='right'>
-                            <Row>
-                              <Col xs={12} align='right'>
-                                <Button variant='outline-primary' type="button" onClick={resetForm} className='mr-3'>Вернуть к инзачальным</Button>
-                                <Button type="button" onClick={handleSubmit}>Создать тест</Button>
-                              </Col>
-                            </Row>
+                          <Card.Footer align='right' className='actions'>
+                            <HoveredBtn disabled={values.title != "" ? !isValid : true} type="button" onClick={handleSubmit} icon={<BsCheck size={20} />}>Создать тест</HoveredBtn>
                           </Card.Footer>
                         </>)}
                   </Formik>

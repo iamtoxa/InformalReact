@@ -79,6 +79,7 @@ const Loader = (props) => {
         xhr.upload.onprogress = (e) => {
           // console.log(`Uploaded ${startByte + e.loaded} of ${startByte + e.total}`);
           progressBar.current.style.setProperty('--precentage', ((startByte + e.loaded)/(file.size)*100)+"%")
+          setProgress((startByte + e.loaded)/(file.size)*100)
         };
 
         xhr.upload.onloadend = (e) => {
@@ -92,7 +93,8 @@ const Loader = (props) => {
           if (xhr.response) {
             if (JSON.parse(xhr.response)) {
               setRemoteSrc(JSON.parse(xhr.response).src)
-              progressBar.current.style.setProperty('--precentage', "0")
+              progressBar.current.style.setProperty('--precentage', "100%")
+              setProgress(100)
 
               if (props.onUpload) props.onUpload(JSON.parse(xhr.response).src);
             }
@@ -108,6 +110,7 @@ const Loader = (props) => {
 
   const [remoteSrc, setRemoteSrc] = useState(false)
   const [defSet, setDefSet] = useState(false)
+  const [progress, setProgress] = useState(0)
 
   const handleChange = (event) => {
     startUpload(event)
@@ -124,15 +127,13 @@ const Loader = (props) => {
   }
 
   return (<>
-    <Form.Group className='ImageUploader' controlId="InputImage">
+    <Form.Group className='VideoUploader' controlId="InputVideo">
       <Form.Label>{props.label}</Form.Label>
       <div>
         <Form.Label className='btn btn-block btn-primary'>Загрузить видео</Form.Label>
         <Form.File accept="video/mp4,video/x-m4v,video/*" name='image' onChange={handleChange} ref={latestProps} />
-        <div className="image">
-          {remoteSrc && (<video src={remoteSrc} controls></video>)}
-          <div className='progress' ref={progressBar}></div>
-        </div>
+        
+  <div style={{display:progress > 0?"flex":"none"}} className='progress' ref={progressBar}>{progress == 100 ? <span>Загрузка завершена</span> : <span>{progress.toFixed(2)}%</span>}</div>
       </div>
     </Form.Group>
 

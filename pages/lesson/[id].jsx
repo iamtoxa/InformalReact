@@ -565,7 +565,7 @@ Page.getInitialProps = async (ctx) => {
     })
 
     var videoCode;
-    await axios.get(`https://storage.informalplace.ru/ytvideo/${lessonInfo.video.split('/').reverse()[0].split('=')[1]}`)
+    await axios.get(`${lessonInfo.video}`)
     .then(function (response) {
       console.log(response);
       videoCode = response.status;
