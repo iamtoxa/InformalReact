@@ -31,18 +31,18 @@
             right: 0;
             height: 100%;
             border-radius: 5px;
-            background: rgba($color: #000000, $alpha: 0.5)
-            // &::after{
-            //     content: "";
-            //     position: absolute;
-            //     top: 0;
-            //     left: 0;
-            //     bottom: 0;
-            //     width: var(--precentage);
-            //     transition: all 0.2s ease;
-            //     background: map-get($map: $theme-colors, $key: "primary");
-            //     border-radius: 5px;
-            // }
+            // background: rgba($color: #000000, $alpha: 0.5)
+            &::after{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: var(--precentage);
+                transition: all 0.2s ease;
+                background: map-get($map: $theme-colors, $key: "primary");
+                border-radius: 5px;
+            }
         }
     }
     input {

@@ -133,7 +133,7 @@ const Loader = (props) => {
         <Form.Label className='btn btn-block btn-primary'>Загрузить видео</Form.Label>
         <Form.File accept="video/mp4,video/x-m4v,video/*" name='image' onChange={handleChange} ref={latestProps} />
         
-  <div style={{display:progress > 0?"flex":"none"}} className='progress' ref={progressBar}>{progress == 100 ? <span>Загрузка завершена</span> : <span>{progress.toFixed(2)}%</span>}</div>
+        <div style={{display:(progress && progress > 0)?"flex":"none"}} className='progress' ref={progressBar}>{progress == 100 ? <span>Загрузка завершена</span> : <span>{progress.toFixed(2)}%</span>}</div>
       </div>
     </Form.Group>
 
