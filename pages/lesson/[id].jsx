@@ -406,7 +406,7 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
                 <Row>
                   <Col xl={9} className='px-0'>
                     <div className='videoPlayer'>
-                      {codeVideo == 416 && <ReactPlayer onError={playerError} url={`https://storage.informalplace.ru/ytvideo/${lessonInfo.video.split('/').reverse()[0].split('=')[1]}`} className='react-player' width='100%' height='100%' controls/>}
+                      {codeVideo == 416 && <ReactPlayer onError={playerError} url={lessonInfo.video} className='react-player' width='100%' height='100%' controls/>}
                       {codeVideo == 418 && <div className='videoPlayer-error'>
                         <span className='main'>Возможно видео ещё обрабатывается.</span>
                         <span className='small'>В случае явной неисправности обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
