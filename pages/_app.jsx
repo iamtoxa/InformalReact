@@ -40,8 +40,8 @@ function MyApp({ Component, pageProps, router, cookies, initialCookies, reduxSto
     <ApolloProvider client={apolloClient}>
       <CookiesProvider cookies={cookies}>
         <ReduxProvider store={store}>
-          <main className={(cookies.get('darkThemeEnabled') == 'true' ? router.route != '/landing' ? 'theme-dark' : 'theme-light' : 'theme-light') + (router.route == '/landing' ? " no_menu" : "")}>
-            {router.route != '/landing' && <Navbar darkThemeEnabled={cookies.get('darkThemeEnabled') == 'true'}/>}
+          <main className={(cookies.get('darkThemeEnabled') == 'true' ? router.route != '/landing' ? 'theme-dark' : 'theme-light' : 'theme-light') + (router.route == '/landing' || router.route == "/@@@@is" ? " no_menu" : "")}>
+            {router.route != '/landing' && router.route != "/@@@@is" && <Navbar darkThemeEnabled={cookies.get('darkThemeEnabled') == 'true'}/>}
             <Component {...pageProps} key={router.route} />
             <LoadIndicator active={loading} />
             <ToastsPanel />
