@@ -240,29 +240,17 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
 
   const [lessonInfo, setLesson] = useState(lesson);
 
-  const [video, setVideo] = useState();
+  const [video, setVideo] = useState(lessonInfo.video);
   const [textView, setTextView] = useState('render');
   const [homeworkView, setHomeworkView] = useState('render');
 
-  const [markdownText, setMarkdownText] = useState();
-  const [markdownHomework, setMarkdownHomework] = useState();
+  const [markdownText, setMarkdownText] = useState(lessonInfo.text);
+  const [markdownHomework, setMarkdownHomework] = useState(lessonInfo.homework);
 
   const [selectedTask, setSelectedTask] = useState();
   const [newOption, setNewOption] = useState();
 
 
-
-  if (lessonInfo.video && lessonInfo.video != video) {
-    setVideo(lessonInfo.video);
-  }
-
-  if (lessonInfo.homework && lessonInfo.homework != homeworkView && homeworkView === undefined) {
-    setMarkdownHomework(lessonInfo.homework);
-  }
-
-  if (lessonInfo.text && lessonInfo.text != markdownText && markdownText === undefined) {
-    setMarkdownText(lessonInfo.text);
-  }
 
   const handleTestDropResult = (_userID = null) => {
     apolloClient.mutate({
@@ -330,7 +318,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       mutation: LECTION_UPDATE__HOMEWORK,
       variables: {
         ID: lessonInfo.ID,
-        homework: markdownHomework
+        homework: markdownHomework.toString()
       }
     })
       .then(({ data }) => {
@@ -356,7 +344,7 @@ const Page = ({ userID, lesson, client: apolloClient }) => {
       mutation: LECTION_UPDATE__TEXT,
       variables: {
         ID: lessonInfo.ID,
-        text: markdownText
+        text: markdownText.toString()
       }
     })
       .then(({ data }) => {

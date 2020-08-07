@@ -15,7 +15,7 @@ const ReactMarkdown = require('react-markdown')
 
 import { RiStarLine } from 'react-icons/ri';
 import { MdMoneyOff } from 'react-icons/md';
-import { BsEyeSlash, BsCheckCircle, BsTrashFill } from 'react-icons/bs';
+import { BsEyeSlash, BsCheckCircle, BsTrashFill, BsCollectionPlay } from 'react-icons/bs';
 
 import { CREATE_TOAST } from "~/redux/actions";
 import { CREATE_MODAL } from "~/redux/actions";
@@ -24,6 +24,7 @@ import ReactPlayer from 'react-player'
 
 import { Formik } from 'formik';
 import { object as yupObject, string as yupString, number as yupNumber, setLocale } from 'yup';
+import { FaTasks } from 'react-icons/fa';
 
 setLocale({
   mixed: {
@@ -67,7 +68,17 @@ query lessonInfo($lessonID:ID!){
       image
       name
       lessons{
+        __typename
         _lessonID
+        title
+        access
+
+        ... on Test{
+          correctAnswers
+          tasks{
+            ID
+          }
+        }
       }
 			owner{
         ID
@@ -140,7 +151,7 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
   const [lessonInfo, setLesson] = useState(lesson);
 
   const [codeVideo, setCodeVideo] = useState(videoCode);
-  
+
 
 
 
@@ -227,302 +238,320 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
       })
   }
 
-  const playerError = (...args)=>{
+  const playerError = (...args) => {
     console.log(args)
   }
 
 
   return (<>
     <Head>
-      {lessonInfo ? <title>{lessonInfo.title}</title> : <title>Страница урока</title>}
+      {<title>{lessonInfo.title}</title>}
     </Head>
 
-    <motion.div transition={{ duration: 0.2, delay: 0 }} initial={{ opacity: 0, translateX: -50 }} animate={{ opacity: 1, translateX: 0 }} exit={{ opacity: 0 }} >
-      <Container className='lessonPage' fluid>
-        {lessonInfo && (
-          <>
 
-            <Row className='header'>
+    {/* <div className="course">Курс: {lessonInfo.course.name}</div> */}
 
-              <Col xl={9} className='naming'>
-                <div className="title">Урок {lessonInfo.course.lessons.findIndex(el => el._lessonID == lessonInfo._lessonID) + 1}. {lessonInfo.title}</div>
-                <div className="course">Курс: {lessonInfo.course.name}</div>
-              </Col>
+    <Container className='lessonPage' fluid>
+      {lessonInfo.__typename == "Test" && (
+        <Row className="Test">
+          <Col xs={{ span: 12, order: 1 }} xl={{ span: 9, order: 0 }} className='p-3'>
 
-              <Col xl={3} className="stat d-none d-xl-flex">
-                <div className="stat-badge">
-                  {lessonInfo.__typename == "Lection" && duration && (
-                    <div className="timing">{Math.floor(duration / 3600)}:{Math.floor(duration / 60) - Math.floor(duration / 3600) * 60}:{Math.floor(duration - Math.floor(duration / 60) * 60)}</div>
-                  )}
-
-                  {lessonInfo.__typename == "Lection" && (
-                    <div className="lessonType">Лекция</div>
-                  )}
-                  {lessonInfo.__typename == "Test" && (
-                    <div className="lessonType">Тестирование</div>
-                  )}
-                </div>
-              </Col>
-
-            </Row>
-
-            {lessonInfo.__typename == "Test" && lessonInfo.correctAnswers != -1 && (
-              <>
-                <Row>
-                  <Col xs={{ span: 12, order: 1 }} xl={{ span: 9, order: 0 }} className='p-3'>
-
-
-                    <Card className='mb-3'>
-                      <Card.Header>Результаты тестирования</Card.Header>
-                      <Card.Body>
-                        <p>Вы уже прошли это тестирование, ваш итоговый результат: {lessonInfo.correctAnswers}</p>
-                      </Card.Body>
-                      <Card.Footer as={Row}>
-                        <Col md={3}>
-                          <Link href='/course/[id]' as={`/course/${lessonInfo.course.ID}`}>
-                            <Button block>Перейти к курсу</Button>
-                          </Link>
-                        </Col>
-                      </Card.Footer>
-                    </Card>
-
-                    {selectedTask != 0 && (
-                      <Card>
-                        <Card.Header>{lessonInfo.tasks.find(el => el.ID == selectedTask).text}</Card.Header>
-                        <ListGroup>
-                          {lessonInfo.tasks.find(el => el.ID == selectedTask).options.map((option) => (
-                            <ListGroup.Item
-                              action={tasksResults[selectedTask] == undefined}
-                              key={option.ID}
-                              className={tasksResults[selectedTask] != undefined ? (option.ID == tasksAnswers[selectedTask] ? (tasksResults[selectedTask] ? 'bg-success' : 'bg-danger') : (correctAnswers.find(ca => ca._taskID == selectedTask)._answerID == option.ID ? 'bg-success' : '')) : option.ID == tasksAnswers[selectedTask] ? 'bg-primary' : (option.ID == selectedOption ? 'bg-info' : '')}
-                              onClick={() => { if (tasksResults[selectedTask] == undefined) setSelectedOption(option.ID) }}
-                            >{option.text}</ListGroup.Item>
-                          ))}
-                        </ListGroup>
-                        <Card.Footer>
-                          <Button disabled={(!tasksAnswers[selectedTask]) || tasksAnswers[selectedTask] == selectedOption} onClick={() => { saveAnswer() }} disabled={tasksResults[selectedTask] != undefined}>Сохранить ответ</Button>
-                        </Card.Footer>
-                      </Card>
-                    )}
+            {Object.entries(tasksResults).length == lessonInfo.tasks.length && (
+              <Card className='mb-3'>
+                <Card.Header>Результаты тестирования</Card.Header>
+                <Card.Body>
+                  <Card.Text>Вы завершили это тестирование, ваш итоговый результат: {Object.entries(tasksResults).filter(([key, val]) => !!val).length}</Card.Text>
+                </Card.Body>
+                <Card.Footer as={Row}>
+                  <Col md={3}>
+                    <Link href='/course/[id]' as={`/course/${lessonInfo.course.ID}`}>
+                      <Button block>Перейти к курсу</Button>
+                    </Link>
                   </Col>
-                  <Col xs={{ span: 12, order: 0 }} xl={{ span: 3, order: 1 }} className='p-3'>
-                    <Card className='mb-3'>
-                      <Card.Header className='bg-primary text-white'>Задания</Card.Header>
-                      <Card.Body>
-                        <Masonry>
-                          {lessonInfo.tasks.map((task, index) => (
-                            <Button
-                              key={task.ID}
-                              className='item mb-2'
-                              variant={(task.ID == selectedTask ? "" : "outline-") + (tasksResults[task.ID] != undefined ? (tasksResults[task.ID] == true ? "success" : "danger") : "primary")}
-                              onClick={() => { setSelectedTask(task.ID) }}
-                            >
-                              {index + 1}
-                            </Button>
-                          ))}
-                        </Masonry>
-                      </Card.Body>
-                      <Card.Footer>
-                        <Button onClick={() => { handleCheckTest() }} disabled>Вы уже прошли этот тест</Button>
-                      </Card.Footer>
-                    </Card>
-                  </Col>
-                </Row>
-              </>
+                </Card.Footer>
+              </Card>
             )}
 
-            {lessonInfo.__typename == "Test" && lessonInfo.correctAnswers == -1 && (
-              <>
-                <Row>
-                  <Col xs={{ span: 12, order: 1 }} xl={{ span: 9, order: 0 }} className='p-3'>
+            {lessonInfo.correctAnswers != -1 &&
+              <Card className='mb-3'>
+                <Card.Header>Результаты тестирования</Card.Header>
+                <Card.Body>
+                  <Card.Text>Вы прошли это тестирование, ваш итоговый результат: {lessonInfo.correctAnswers}</Card.Text>
+                </Card.Body>
+              </Card>}
 
-                    {Object.entries(tasksResults).length == lessonInfo.tasks.length && (
-                      <Card className='mb-3'>
-                        <Card.Header>Результаты тестирования</Card.Header>
-                        <Card.Body>
-                          {Object.entries(tasksResults).filter(([key, val]) => !!val).length / Object.entries(tasksResults).length > 0.5 ? (
-                            <p>Вы успешно прошли тестирование. Поздравляем!</p>
-                          ) : (
-                              <p>Вы дали слишком мало правильных ответов.. Рекомендуем повторить пройденный материал ещё раз.</p>
-                            )}
-                        </Card.Body>
-                        <Card.Footer as={Row}>
-                          <Col md={3}>
-                            <Link href='/course/[id]' as={`/course/${lessonInfo.course.ID}`}>
-                              <Button block>Перейти к курсу</Button>
-                            </Link>
-                          </Col>
-                        </Card.Footer>
-                      </Card>
-                    )}
-
-                    {selectedTask != 0 && (
-                      <Card>
-                        <Card.Header>{lessonInfo.tasks.find(el => el.ID == selectedTask).text}</Card.Header>
-                        <ListGroup>
-                          {lessonInfo.tasks.find(el => el.ID == selectedTask).options.map((option) => (
-                            <ListGroup.Item
-                              action={tasksResults[selectedTask] == undefined}
-                              key={option.ID}
-                              className={tasksResults[selectedTask] != undefined ? (option.ID == tasksAnswers[selectedTask] ? (tasksResults[selectedTask] ? 'bg-success' : 'bg-danger') : (correctAnswers.find(ca => ca._taskID == selectedTask)._answerID == option.ID ? 'bg-success' : '')) : option.ID == tasksAnswers[selectedTask] ? 'bg-primary' : (option.ID == selectedOption ? 'bg-info' : '')}
-                              onClick={() => { if (tasksResults[selectedTask] == undefined) setSelectedOption(option.ID) }}
-                            >{option.text}</ListGroup.Item>
-                          ))}
-                        </ListGroup>
-                        <Card.Footer>
-                          <Button disabled={(!tasksAnswers[selectedTask]) || tasksAnswers[selectedTask] == selectedOption} onClick={() => { saveAnswer() }} disabled={tasksResults[selectedTask] != undefined || lessonInfo.tasks.find(el => el.ID == selectedTask).options.findIndex(el => el.ID == selectedOption) == -1 || tasksAnswers[selectedTask] == selectedOption}>Сохранить ответ</Button>
-                        </Card.Footer>
-                      </Card>
-                    )}
-                  </Col>
-                  <Col xs={{ span: 12, order: 0 }} xl={{ span: 3, order: 1 }} className='p-3'>
-                    <Card className='mb-3'>
-                      <Card.Header className='bg-primary text-white'>Задания</Card.Header>
-                      <Card.Body>
-                        <Masonry>
-                          {lessonInfo.tasks.map((task, index) => (
-                            <Button
-                              key={task.ID}
-                              className='item mb-2'
-                              variant={(task.ID == selectedTask ? "" : "outline-") + (tasksResults[task.ID] != undefined ? (tasksResults[task.ID] == true ? "success" : "danger") : tasksAnswers[task.ID] != undefined ? "primary" : "gray-3")}
-                              onClick={() => { setSelectedTask(task.ID) }}
-                            >
-                              {index + 1}
-                            </Button>
-                          ))}
-                        </Masonry>
-                      </Card.Body>
-                      <Card.Footer>
-                        <Button onClick={() => { handleCheckTest() }} disabled={Object.entries(tasksAnswers).length != lessonInfo.tasks.length}>Отправить ответы</Button>
-                      </Card.Footer>
-                    </Card>
-                  </Col>
-                </Row>
-              </>
+            {selectedTask != 0 && (
+              <Card>
+                <Card.Header>{lessonInfo.tasks.find(el => el.ID == selectedTask).text}</Card.Header>
+                <ListGroup>
+                  {lessonInfo.tasks.find(el => el.ID == selectedTask).options.map((option) => (
+                    <ListGroup.Item
+                      action={tasksResults[selectedTask] == undefined}
+                      key={option.ID}
+                      className={tasksResults[selectedTask] != undefined ? (option.ID == tasksAnswers[selectedTask] ? (tasksResults[selectedTask] ? 'bg-success' : 'bg-danger') : (correctAnswers.find(ca => ca._taskID == selectedTask)._answerID == option.ID ? 'bg-success' : '')) : option.ID == tasksAnswers[selectedTask] ? 'bg-primary' : (option.ID == selectedOption ? 'bg-info' : '')}
+                      onClick={() => { if (tasksResults[selectedTask] == undefined) setSelectedOption(option.ID) }}
+                    >{option.text}</ListGroup.Item>
+                  ))}
+                </ListGroup>
+                {lessonInfo.correctAnswers == -1 &&
+                  <Card.Footer>
+                    <Button disabled={tasksResults[selectedTask] != undefined || lessonInfo.tasks.find(el => el.ID == selectedTask).options.findIndex(el => el.ID == selectedOption) == -1 || tasksAnswers[selectedTask] == selectedOption} onClick={() => { saveAnswer() }}>Сохранить ответ</Button>
+                  </Card.Footer>}
+              </Card>
             )}
+          </Col>
+          <Col xs={{ span: 12, order: 0 }} xl={{ span: 3, order: 1 }} className='p-3'>
+            <Card className='mb-3'>
+              <Card.Header className='bg-primary text-white'>Задания</Card.Header>
+              <Card.Body>
+                <Masonry>
+                  {lessonInfo.tasks.map((task, index) => (
+                    <Button
+                      key={task.ID}
+                      className='item mb-2'
+                      variant={(task.ID == selectedTask ? "" : "outline-") + (tasksResults[task.ID] != undefined ? (tasksResults[task.ID] == true ? "success" : "danger") : tasksAnswers[task.ID] != undefined ? "primary" : "gray-3")}
+                      onClick={() => { setSelectedTask(task.ID) }}
+                    >
+                      {index + 1}
+                    </Button>
+                  ))}
+                </Masonry>
+              </Card.Body>
+              <Card.Footer>
+                {lessonInfo.correctAnswers != -1 ?
+                  <Button disabled>Вы уже прошли этот тест</Button> :
+                  <Button disabled={Object.entries(tasksAnswers).length != lessonInfo.tasks.length} onClick={() => { handleCheckTest() }}>Отправить ответы</Button>}
+              </Card.Footer>
+            </Card>
 
-            {lessonInfo.__typename == "Lection" && (
-              <>
-                <Row>
-                  <Col xl={9} className='px-0'>
-                    <div className='videoPlayer'>
-                      {codeVideo == 416 && <ReactPlayer onError={playerError} url={lessonInfo.video} className='react-player' width='100%' height='100%' controls/>}
-                      {codeVideo == 418 && <div className='videoPlayer-error'>
-                        <span className='main'>Возможно видео ещё обрабатывается.</span>
-                        <span className='small'>В случае явной неисправности обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
-                      </div>}
-                      {codeVideo == 403 && <div className='videoPlayer-error'>
-                        <span className='main'>Доступ к видео ограничен.</span>
-                        <span className='small'>Обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
-                      </div>}
-                      {codeVideo == 400 && <div className='videoPlayer-error'>
-                        <span className='main'>Ошибка запроса.</span>
-                        <span className='small'>Обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
-                      </div>}
-                      
-                    </div>
+            <Card className='lessonsListCard card--custom'>
+              <Card.Header className='bg-primary text-white'>
+                <h1 className='title'>Курс: {lessonInfo.course.name}</h1>
+                {lessonInfo.course.owner.ID == userID &&
+                  <Link href='/controlPanel/course/[id]/lesson/[lessonId]' as={`/controlPanel/course/${lessonInfo.course.ID}/lesson/${lessonInfo._lessonID}`}>
+                    <Button size="sm" variant='outline-white' className='edit'>Редактировать</Button>
+                  </Link>}
+              </Card.Header>
+              <ListGroup className='lessonsList'>
+                {lessonInfo.course.lessons.map(lesson => {
+                  if (lesson.__typename == "Test") {
+                    return lesson.access ?
+                      <Link key={lesson._lessonID} href='/lesson/[id]' as={`/lesson/${lesson._lessonID}`}>
+                        <ListGroup.Item className={`item ${lesson._lessonID == lessonInfo._lessonID ? "current" : ""}`} action>
+                          <div className='icon'><FaTasks size={20} /></div>
+                          <div className="title">{lesson.title}</div>
+                          {lesson.correctAnswers != -1 ?
+                            <div className="score">{lesson.correctAnswers}/{lesson.tasks.length}</div> :
+                            <div className="required"></div>
+                          }
+                        </ListGroup.Item>
+                      </Link> :
+                      <ListGroup.Item key={lesson._lessonID} className="item noAccess">
+                        <div className='icon'><FaTasks size={20} /></div>
+                        <div className="title">{lesson.title}</div>
+                        {lesson.correctAnswers != -1 ?
+                          <div className="score">{lesson.correctAnswers}/{lesson.tasks.length}</div> :
+                          <div className="required"></div>
+                        }
+                      </ListGroup.Item>
+                  }
 
-                  </Col>
-                  <Col xl={3} className='px-0'>
-                    <Card className='materials'>
-                      <Card.Header className='bg-primary text-white'>Материалы урока</Card.Header>
-                      <Card.Body>
-                        {lessonInfo.text ? (
-                          <ReactMarkdown source={lessonInfo.text} />
-                        ) : (<span>Материалов урока нет</span>)}
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
 
-                <Row>
-                  <Col xl={9} className='px-0'>
-                    <Card className='homework'>
-                      <Card.Header className='bg-primary text-white'>Домашняя работа</Card.Header>
-                      <Card.Body>
-                        {lessonInfo.homework ? (
-                          <ReactMarkdown source={lessonInfo.homework} />
-                        ) : (<span>Домашней работы нет</span>)}
-                      </Card.Body>
-                    </Card>
+                  if (lesson.__typename == "Lection") {
+                    return lesson.access ?
+                      <Link key={lesson._lessonID} href={'/lesson/[id]'} as={`/lesson/${lesson._lessonID}`}>
+                        <ListGroup.Item className={`item ${lesson._lessonID == lessonInfo._lessonID ? "current" : ""}`} action>
+                          <div className='icon'><BsCollectionPlay size={20} /></div>
+                          <div className="title">{lesson.title}</div>
+                        </ListGroup.Item>
+                      </Link> :
+                      <ListGroup.Item key={lesson._lessonID} className="item noAccess">
+                        <div className='icon'><BsCollectionPlay size={20} /></div>
+                        <div className="title">{lesson.title}</div>
+                      </ListGroup.Item>
+                  }
 
-                  </Col>
-                  <Col xl={3} className='comments mt-3 px-3'>
-                    <div className='title mb-3'>Комментарии ({lessonInfo.comments.length})</div>
+                })}
+              </ListGroup>
+            </Card>
+          </Col>
+        </Row>
+      )}
 
-                    {lessonInfo.comments.map((comment) => {
-                      if (!comment.user.firstName && !comment.user.lastName) {
-                        comment.user.firstName = "Анонимный"
-                        comment.user.lastName = "пользователь"
-                      }
-                      return (
-                        <Card className='comment mb-2' key={comment.ID}>
-                          <Link href='/user/[id]' as={`/user/${comment.user.ID}`}>
-                            <Card.Header className='bg-primary text-white'>
-                              {comment.user.image && <img alt='' src={comment.user.image} alt="" />}
-                              <span>{comment.user.firstName}&nbsp;{comment.user.lastName}</span>
-                              {comment.user.ID == userID && <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-                                <Button onClick={(e) => { e.stopPropagation(); handleCommentRemove(comment.ID) }} className='btn-icon'><BsTrashFill className='text-danger' /></Button>
-                              </div>}
-                            </Card.Header>
-                          </Link>
-                          <Card.Body>{comment.text}</Card.Body>
-                        </Card>
-                      )
-                    })}
+      {lessonInfo.__typename == "Lection" && (
+        <>
+          <Row className="Lection">
+            <Col xl={9} className='px-0'>
+              <div className='videoPlayer'>
+                {codeVideo == 416 && <ReactPlayer onError={playerError} url={lessonInfo.video} className='react-player' width='100%' height='100%' controls />}
+                {codeVideo == 418 && <div className='videoPlayer-error'>
+                  <span className='main'>Возможно видео ещё обрабатывается.</span>
+                  <span className='small'>В случае явной неисправности обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
+                </div>}
+                {codeVideo == 403 && <div className='videoPlayer-error'>
+                  <span className='main'>Доступ к видео ограничен.</span>
+                  <span className='small'>Обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
+                </div>}
+                {codeVideo == 400 && <div className='videoPlayer-error'>
+                  <span className='main'>Ошибка запроса.</span>
+                  <span className='small'>Обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
+                </div>}
 
-                    <Card className='mb-2'>
+              </div>
+
+            </Col>
+            <Col xl={3} className='px-xl-0 py-lg-3 py-xl-0'>
+              <Card className='lessonsListCard card--custom'>
+                <Card.Header className='bg-primary text-white'>
+                  <h1 className='title'>Курс: {lessonInfo.course.name}</h1>
+                  {lessonInfo.course.owner.ID == userID &&
+                    <Link href='/controlPanel/course/[id]/lesson/[lessonId]' as={`/controlPanel/course/${lessonInfo.course.ID}/lesson/${lessonInfo._lessonID}`}>
+                      <Button size="sm" variant='outline-white' className='edit'>Редактировать</Button>
+                    </Link>}
+                </Card.Header>
+                <ListGroup className='lessonsList'>
+                  {lessonInfo.course.lessons.map(lesson => {
+                    if (lesson.__typename == "Test") {
+                      return lesson.access ?
+                        <Link key={lesson._lessonID} href='/lesson/[id]' as={`/lesson/${lesson._lessonID}`}>
+                          <ListGroup.Item className={`item ${lesson._lessonID == lessonInfo._lessonID ? "current" : ""}`} action>
+                            <div className='icon'><FaTasks size={20} /></div>
+                            <div className="title">{lesson.title}</div>
+                            {lesson.correctAnswers != -1 ?
+                              <div className="score">{lesson.correctAnswers}/{lesson.tasks.length}</div> :
+                              <div className="required"></div>
+                            }
+                          </ListGroup.Item>
+                        </Link> :
+                        <ListGroup.Item key={lesson._lessonID} className="item noAccess">
+                          <div className='icon'><FaTasks size={20} /></div>
+                          <div className="title">{lesson.title}</div>
+                          {lesson.correctAnswers != -1 ?
+                            <div className="score">{lesson.correctAnswers}/{lesson.tasks.length}</div> :
+                            <div className="required"></div>
+                          }
+                        </ListGroup.Item>
+                    }
+
+
+                    if (lesson.__typename == "Lection") {
+                      return lesson.access ?
+                        <Link key={lesson._lessonID} href={'/lesson/[id]'} as={`/lesson/${lesson._lessonID}`}>
+                          <ListGroup.Item className={`item ${lesson._lessonID == lessonInfo._lessonID ? "current" : ""}`} action>
+                            <div className='icon'><BsCollectionPlay size={20} /></div>
+                            <div className="title">{lesson.title}</div>
+                          </ListGroup.Item>
+                        </Link> :
+                        <ListGroup.Item key={lesson._lessonID} className="item noAccess">
+                          <div className='icon'><BsCollectionPlay size={20} /></div>
+                          <div className="title">{lesson.title}</div>
+                        </ListGroup.Item>
+                    }
+
+                  })}
+                </ListGroup>
+              </Card>
+            </Col>
+
+            <Col xl={9} className='py-3'>
+              <div className="additionalInfo">
+                <Card className='card--custom'>
+                  <Card.Header>Материалы урока</Card.Header>
+                  {lessonInfo.text.length>0 ?
+                    <Card.Body>
+                      <ReactMarkdown source={lessonInfo.text} />
+                    </Card.Body> :
+                    <Card.Body>
+
+                    </Card.Body>}
+                </Card>
+                
+                <Card className='card--custom'>
+                  <Card.Header>Домашняя работа</Card.Header>
+                  {lessonInfo.homework.length>0 ?
+                    <Card.Body>
+                      <ReactMarkdown source={lessonInfo.homework} />
+                    </Card.Body> :
+                    <Card.Body>
+
+                    </Card.Body>
+                  }
+                </Card>
+              </div>
+            </Col>
+            <Col xl={3} className='comments mt-3 px-3'>
+              <div className='title mb-3'>Комментарии ({lessonInfo.comments.length})</div>
+
+              {lessonInfo.comments.map((comment) => {
+                if (!comment.user.firstName && !comment.user.lastName) {
+                  comment.user.firstName = "Анонимный"
+                  comment.user.lastName = "пользователь"
+                }
+                return (
+                  <Card className='comment mb-2' key={comment.ID}>
+                    <Link href='/user/[id]' as={`/user/${comment.user.ID}`}>
                       <Card.Header className='bg-primary text-white'>
-                        <span>Оставить комментарий</span>
+                        {comment.user.image && <img alt='' src={comment.user.image} alt="" />}
+                        <span>{comment.user.firstName}&nbsp;{comment.user.lastName}</span>
+                        {comment.user.ID == userID && <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+                          <Button onClick={(e) => { e.stopPropagation(); handleCommentRemove(comment.ID) }} className='btn-icon'><BsTrashFill className='delete' /></Button>
+                        </div>}
                       </Card.Header>
-                      <Card.Body>
-                        <Formik enableReinitialize onSubmit={handleCommentPublish} validationSchema={CommentSchema} initialValues={{ text: "" }}>
-                          {({
-                            handleSubmit,
-                            handleChange,
-                            values,
-                            touched,
-                            isValid,
-                            errors,
-                            resetForm
-                          }) => (
-                              <>
-                                <Form noValidate>
-                                  <Form.Row>
-                                    <Form.Group as={Col} md="12" controlId="control_text">
-                                      <Form.Control
-                                        as='textarea'
-                                        type="text"
-                                        name="text"
-                                        value={values.text}
-                                        onChange={handleChange}
-                                        isInvalid={!touched.text && errors.text}
-                                      />
-                                      <Form.Control.Feedback type='invalid'>
-                                        {errors.text}
-                                      </Form.Control.Feedback>
-                                    </Form.Group>
-                                  </Form.Row>
+                    </Link>
+                    <Card.Body>{comment.text}</Card.Body>
+                  </Card>
+                )
+              })}
 
-                                  <Form.Row align='right'>
-                                    <Button block disabled={!isValid} onClick={handleSubmit}>Отправить</Button>
-                                  </Form.Row>
-                                </Form>
-                              </>
-                            )}
+              <Card className='mb-2'>
+                <Card.Header className='bg-primary text-white'>
+                  <span>Оставить комментарий</span>
+                </Card.Header>
+                <Card.Body>
+                  <Formik enableReinitialize onSubmit={handleCommentPublish} validationSchema={CommentSchema} initialValues={{ text: "" }}>
+                    {({
+                      handleSubmit,
+                      handleChange,
+                      values,
+                      touched,
+                      isValid,
+                      errors,
+                      resetForm
+                    }) => (
+                        <>
+                          <Form noValidate>
+                            <Form.Row>
+                              <Form.Group as={Col} md="12" controlId="control_text">
+                                <Form.Control
+                                  as='textarea'
+                                  type="text"
+                                  name="text"
+                                  value={values.text}
+                                  onChange={handleChange}
+                                  isInvalid={!touched.text && errors.text}
+                                  className="slim"
+                                />
+                                <Form.Control.Feedback type='invalid'>
+                                  {errors.text}
+                                </Form.Control.Feedback>
+                              </Form.Group>
+                            </Form.Row>
 
-                        </Formik>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
-              </>
-            )}
+                            <Form.Row align='right'>
+                              <Button block disabled={!isValid} onClick={handleSubmit}>Отправить</Button>
+                            </Form.Row>
+                          </Form>
+                        </>
+                      )}
 
-          </>
-        )}
-      </Container>
-    </motion.div>
+                  </Formik>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </>
+      )}
+    </Container>
   </>)
 
 }
@@ -534,6 +563,8 @@ Page.getInitialProps = async (ctx) => {
   const axios = require('axios').default;
 
   const { id } = ctx.query;
+
+  console.log(ctx.query)
 
   const checkLoggedIn = require('~/lib/checkLoggedIn').default;
   const AccessToken = checkLoggedIn(ctx);
@@ -564,15 +595,18 @@ Page.getInitialProps = async (ctx) => {
       return false;
     })
 
+  if (lessonInfo.video) {
     var videoCode;
     await axios.get(`${lessonInfo.video}`)
-    .then(function (response) {
-      console.log(response);
-      videoCode = response.status;
-    })
-    .catch(function (error) {
-      videoCode = error.response.status;
-    })
+      .then(function (response) {
+        console.log(response);
+        videoCode = response.status;
+      })
+      .catch(function (error) {
+        console.log(error.response.status);
+        videoCode = error.response.status;
+      })
+  }
 
   return {
     pageId: id, userID, lesson: lessonInfo, videoCode

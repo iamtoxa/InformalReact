@@ -36,13 +36,20 @@ $theme-colors: (
 @import './pages/lessonEdit';
 
 
+
 .draggable{
     cursor: pointer;
 }
 
 textarea{
     min-height: 8em;
+
+    &.slim{
+        min-height: 4em;
+    }
 }
+
+
 
 .maxHeight{
     max-height: 500px;
@@ -372,10 +379,55 @@ main.no_menu {
     width: 100%;
 }
 
+
+
+.card--custom{
+    background-color: map-get($map: $theme-colors, $key: "primary") !important;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: map-get($map: $theme-colors, $key: "primary");
+
+    h1{
+        font-size: 14pt;
+        margin: 0;
+    }
+
+    .card-header{
+        border: none;
+        background-color: map-get($map: $theme-colors, $key: "primary");
+        color: map-get($map: $theme-colors, $key: "white")
+    }
+
+    .card-body{
+        flex: 1;
+        border-radius: 5px;
+        overflow: hidden;
+
+        >*:last-child{
+            margin-bottom: 0;
+        }
+    }
+
+    .list-group, .list-group:last-child{
+        flex: 1;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+}
+
 .theme-dark {
     .card {
         background: map-get($map: $theme-colors, $key: "black");
         color: map-get($map: $theme-colors, $key: "white");
+    }
+
+    .card--custom{
+        .list-group{
+            background-color: map-get($map: $theme-colors, $key: "black");
+        }
+        .card-body{
+            background-color: map-get($map: $theme-colors, $key: "black");
+        }
     }
 }
 
@@ -383,6 +435,15 @@ main.no_menu {
     .card {
         background: map-get($map: $theme-colors, $key: "white");
         color: map-get($map: $theme-colors, $key: "black");
+    }
+
+    .card--custom{
+        .list-group{
+            background-color: map-get($map: $theme-colors, $key: "white");
+        }
+        .card-body{
+            background-color: map-get($map: $theme-colors, $key: "white");
+        }
     }
 }
 

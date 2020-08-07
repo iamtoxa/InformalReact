@@ -17,21 +17,6 @@ const httpsOptions = {
 app.prepare().then(() => {
   const expressApp = express()
   expressApp.all('*', (req, res) => {
-
-    console.log(req.get('host'));
-    if(req.get('host') == 'thisnotspam.ru'){
-      // console.log(req.originalUrl);
-      if(req.originalUrl == "/NotEvenClose.png"){
-        res.sendFile(path.join(path.join(__dirname, 'secretpage'), 'NotEvenClose.png'));
-        return true;
-      } else if(req.originalUrl == "/@@@@is") {
-        res.sendFile(path.join(path.join(__dirname, 'secretpage'), 'index.html'));
-        return true;
-      }
-      res.end();
-      return true;
-    }
-
     return handle(req, res)
   })
 

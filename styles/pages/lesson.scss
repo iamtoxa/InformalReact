@@ -46,17 +46,65 @@
         }
     }
 
-    .videoPlayer{
-        border-radius: 0;
+    .lessonsList{
+        border: 0;
+        .item{
+            border-radius: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            .icon{
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+            }
+
+            .title{
+                flex: 1;
+            }
+
+            .score{
+                color: map-get($map: $theme-colors, $key: "gray-3");
+            }
+
+            &.current{
+                background: map-get($map: $theme-colors, $key: "primary");
+                color: map-get($map: $theme-colors, $key: "white");
+
+                .score{
+                    color: map-get($map: $theme-colors, $key: "white");
+                    opacity: 0.7;
+                }
+            }
+        }
+
+        .noAccess{
+            opacity: 0.5;
+        }
+
+        .required{
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 3px;
+            background: map-get($map: $theme-colors, $key: "primary");
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+        }
     }
 
-    .materials{
-        position: absolute;
-        border: 3px solid map-get($map: $theme-colors, $key: "primary");
+    .videoPlayer{
         border-radius: 0;
-        min-height: 100%;
-        max-height: 100%;
 
+        video{
+            outline: none; 
+        }
+    }
+
+    .lessonsListCard{
+        max-height: 100%;
+        
         @include media-breakpoint-down(lg) {
             position: relative;
             max-height: 500px;
@@ -64,23 +112,56 @@
         }
 
         .card-header{
-            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .edit{
+                align-self: flex-start;
+            }
         }
+
         .card-body{
             overflow-y: auto;
         }
     }
 
-    .homework{
+    .Lection .lessonsListCard{
+        position: absolute;
         border: 3px solid map-get($map: $theme-colors, $key: "primary");
-        border-radius: 0;
-        max-height: 500px;
-
-        .card-header{
-            border-radius: 0;
+        min-height: 100%;
+        border-radius: 0 0 5px 0;
+        @include media-breakpoint-down(lg) {
+            position: relative;
+            max-height: 500px;
+            border-radius: 5px;
         }
-        .card-body{
-            overflow-y: auto;
+    }
+
+    .additionalInfo{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        
+        @include media-breakpoint-up(sm) {
+            >*:not(:last-child){
+                margin-right: 10px;
+            }
+        }
+
+        @include media-breakpoint-down(md) {
+            flex-direction: column;
+        }
+
+        >*{
+            flex: 1;
+            width: auto;
+            @include media-breakpoint-down(lg) {
+                width: 100%;
+                &:not(:last-child){
+                    margin-bottom: 10px;
+                }
+            }
         }
     }
 
@@ -92,9 +173,8 @@
             line-height: 29px;
         }
         .comment{
-            border: 3px solid map-get($map: $theme-colors, $key: "primary");
             max-height: 100%;
-            border-radius: 10px;
+            border-radius: 5px;
             overflow: hidden;
             .card-header{
                 cursor: pointer;
@@ -106,7 +186,7 @@
 
                 display: flex;
                 align-items: center;
-                padding: 3px;
+                padding: 8px;
 
                 img{
                     margin-right: 10px;
@@ -116,6 +196,10 @@
                     border-radius: 10px;
                     object-fit: cover;
                     object-position: center;
+                }
+
+                .delete{
+                    color: darken(map-get($map: $theme-colors, $key: "primary"),30);
                 }
             }
             .card-body{
@@ -143,6 +227,19 @@
             }
         }
     }
+
+    .lessonsList{
+        .item{
+            &.current{
+                background: darken(map-get($map: $theme-colors, $key: "primary"),20);
+                color: map-get($map: $theme-colors, $key: "white");
+    
+                .score{
+                    color: map-get($map: $theme-colors, $key: "white");
+                }
+            }
+        }
+    }
 }
 
 .theme-light .lessonPage {
@@ -160,6 +257,19 @@
             .timing{
                 background: map-get($map: $theme-colors, $key: "black");
                 color: map-get($map: $theme-colors, $key: "white");
+            }
+        }
+    }
+
+    .lessonsList{
+        .item{
+            &.current{
+                background: lighten(map-get($map: $theme-colors, $key: "primary"),20);
+                color: map-get($map: $theme-colors, $key: "black");
+    
+                .score{
+                    color: map-get($map: $theme-colors, $key: "black");
+                }
             }
         }
     }
