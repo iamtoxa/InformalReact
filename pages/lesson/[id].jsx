@@ -152,7 +152,17 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
 
   const [codeVideo, setCodeVideo] = useState(videoCode);
 
-
+  // useEffect(() => {
+  //   try {
+  //     document.getElementById('main').scroll({
+  //       top: 0,
+  //       left: 0,
+  //       behavior: 'smooth'
+  //     });
+  //   } catch (error) {
+  //     document.getElementById('main').scrollTo(0, 0);
+  //   }
+  // });
 
 
   const router = useRouter()
@@ -383,7 +393,7 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
           <Row className="Lection">
             <Col xl={9} className='px-0'>
               <div className='videoPlayer'>
-                {codeVideo == 416 && <ReactPlayer onError={playerError} url={lessonInfo.video} className='react-player' width='100%' height='100%' controls />}
+                {codeVideo == 200 && <ReactPlayer onError={playerError} url={lessonInfo.video} className='react-player' width='100%' height='100%' controls />}
                 {codeVideo == 418 && <div className='videoPlayer-error'>
                   <span className='main'>Возможно видео ещё обрабатывается.</span>
                   <span className='small'>В случае явной неисправности обратитесь в <Link href='/contacts'><a>службу поддержки</a></Link></span>
@@ -457,7 +467,7 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
               <div className="additionalInfo">
                 <Card className='card--custom'>
                   <Card.Header>Материалы урока</Card.Header>
-                  {lessonInfo.text && lessonInfo.text.length>0 ?
+                  {lessonInfo.text && lessonInfo.text.length > 0 ?
                     <Card.Body>
                       <ReactMarkdown source={lessonInfo.text} />
                     </Card.Body> :
@@ -465,10 +475,10 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
 
                     </Card.Body>}
                 </Card>
-                
+
                 <Card className='card--custom'>
                   <Card.Header>Домашняя работа</Card.Header>
-                  {lessonInfo.homework && lessonInfo.homework.length>0 ?
+                  {lessonInfo.homework && lessonInfo.homework.length > 0 ?
                     <Card.Body>
                       <ReactMarkdown source={lessonInfo.homework} />
                     </Card.Body> :
@@ -595,20 +605,8 @@ Page.getInitialProps = async (ctx) => {
       return false;
     })
 
-    
+  const videoCode = 200;
 
-  if (lessonInfo.video) {
-    var videoCode;
-    await axios.get(`${lessonInfo.video}`)
-      .then(function (response) {
-        console.log(response);
-        videoCode = response.status;
-      })
-      .catch(function (error) {
-        console.log(error.response.status);
-        videoCode = error.response.status;
-      })
-  }
 
   return {
     pageId: id, userID, lesson: lessonInfo, videoCode

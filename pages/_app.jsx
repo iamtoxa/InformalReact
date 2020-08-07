@@ -1,7 +1,7 @@
 import '~/styles/main.scss'
 
 import App from 'next/app';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CookiesProvider, Cookies, withCookies, useCookies } from 'react-cookie';
 import { Provider as ReduxProvider, useSelector } from "react-redux";
 
@@ -34,11 +34,24 @@ function MyApp({ Component, pageProps, router, cookies, initialCookies, reduxSto
     if(cookies.get('accessToken')) store.dispatch({ type: UPDATE_ACCESS, value: cookies.get('accessToken') })
     setLoading(false);
   }
+
+  useEffect(() => {
+    try {
+      document.getElementById('main').scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    } catch (error) {
+      document.getElementById('main').scrollTo(0, 0);
+    }
+  });
+
   return (
     <ApolloProvider client={apolloClient}>
       <CookiesProvider cookies={cookies}>
         <ReduxProvider store={store}>
-          <main className={(cookies.get('darkThemeEnabled') == 'true' ? router.route != '/landing' ? 'theme-dark' : 'theme-light' : 'theme-light') + (router.route == '/landing' ? " no_menu" : "")}>
+          <main id='main' className={(cookies.get('darkThemeEnabled') == 'true' ? router.route != '/landing' ? 'theme-dark' : 'theme-light' : 'theme-light') + (router.route == '/landing' ? " no_menu" : "")}>
             {router.route != '/landing' && <Navbar darkThemeEnabled={cookies.get('darkThemeEnabled') == 'true'}/>}
             <Component {...pageProps} key={router.asPath} />
             <LoadIndicator active={loading} />
