@@ -457,7 +457,7 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
               <div className="additionalInfo">
                 <Card className='card--custom'>
                   <Card.Header>Материалы урока</Card.Header>
-                  {lessonInfo.text.length>0 ?
+                  {lessonInfo.text && lessonInfo.text.length>0 ?
                     <Card.Body>
                       <ReactMarkdown source={lessonInfo.text} />
                     </Card.Body> :
@@ -468,7 +468,7 @@ const Page = ({ userID, lesson, client: apolloClient, videoCode }) => {
                 
                 <Card className='card--custom'>
                   <Card.Header>Домашняя работа</Card.Header>
-                  {lessonInfo.homework.length>0 ?
+                  {lessonInfo.homework && lessonInfo.homework.length>0 ?
                     <Card.Body>
                       <ReactMarkdown source={lessonInfo.homework} />
                     </Card.Body> :
@@ -594,6 +594,8 @@ Page.getInitialProps = async (ctx) => {
     .catch(() => {
       return false;
     })
+
+    
 
   if (lessonInfo.video) {
     var videoCode;
