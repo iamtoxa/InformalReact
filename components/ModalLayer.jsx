@@ -10,9 +10,8 @@ const ModalLayer = () => {
   const itemsRef = useRef(items);
   itemsRef.current = items;
 
-  const newModal = useSelector((state) => state.preferences.appendModal);
-  if (newModal != lastModal) {
-    console.log('new modal')
+  const newModal = useSelector((state) => state.modals.appendModal);
+  if (newModal && newModal != lastModal) {
     setLastModal(newModal)
     newModal.id = lastID + 1;
     setLastId(lastID + 1)

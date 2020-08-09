@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { useSelector, useDispatch } from "react-redux";
-import { TOGGLE_DARKTHEME, DELETE_AUCH } from "../../redux/actions";
+import { SET_DARKTHEME, SET_AUCH } from "../../redux/actions";
 import { withCookies } from 'react-cookie';
 
 import BrandIcon from '~/components/Icons/brand-1.svg';
@@ -48,6 +48,9 @@ const Item = (props) => {
 }
 
 const Navbar = (props) => {
+  const accessToken = useSelector((state) => state.auch.access);
+  const darkmode = useSelector((state) => state.theme.darkThemeEnabled);
+
   const [burger, setBurger] = useState(false);
 
   const toggleBurger = ()=>{
@@ -55,21 +58,20 @@ const Navbar = (props) => {
   }
 
   let className='page-navbar';
-  if(burger && props.cookies.get('accessToken')){
+  if(burger && accessToken){
     className += " opened"
   }
 
-  const accessToken = useSelector((state) => state.preferences.access);
   const dispatch = useDispatch();
 
   const logout = ()=>{
     props.cookies.remove('accessToken', { path: "/" });
-    dispatch({ type: DELETE_AUCH });
+    dispatch({ type: SET_AUCH, value: undefined });
   }
   
   const handleToggleDrakmode = ()=>{
-    props.cookies.set('darkThemeEnabled', !props.darkThemeEnabled, { maxAge: 30 * 24 * 60 * 60, path: "/" });
-    dispatch({ type: TOGGLE_DARKTHEME })
+    props.cookies.set('darkThemeEnabled', !darkmode, { maxAge: 30 * 24 * 60 * 60, path: "/" });
+    dispatch({ type: SET_DARKTHEME, value:!darkmode })
   }
 
 
@@ -78,15 +80,15 @@ const Navbar = (props) => {
       <Item brand className='item brand'><BrandIcon/></Item>
       <Item className='item' href="/"><RiHome2Line size={36} /></Item>
 
-      {!props.cookies.get('accessToken') && <Item className='item' href="/login"><RiLoginBoxLine size={36} /></Item>}
-      {props.cookies.get('accessToken') && <Item className='item' href="/user/[id]" as="/user/me"><RiUser2Line size={36} /></Item>}
+      {!accessToken && <Item className='item' href="/login"><RiLoginBoxLine size={36} /></Item>}
+      {accessToken && <Item className='item' href="/user/[id]" as="/user/me"><RiUser2Line size={36} /></Item>}
 
-      {props.cookies.get('accessToken') && <Item className='item' href="/controlPanel"><RiSettings4Line size={36} /></Item>}
-      {props.cookies.get('accessToken') && <Item className='item d-md-none' onClick={toggleBurger} active={burger}><RiMoreLine size={36} /></Item>}
+      {accessToken && <Item className='item' href="/controlPanel"><RiSettings4Line size={36} /></Item>}
+      {accessToken && <Item className='item d-md-none' onClick={toggleBurger} active={burger}><RiMoreLine size={36} /></Item>}
       
-      <Item className='item' onClick={handleToggleDrakmode} active={props.darkThemeEnabled}><RiMoonLine size={36} /></Item>
+      <Item className='item' onClick={handleToggleDrakmode} active={darkmode}><RiMoonLine size={36} /></Item>
 
-      {props.cookies.get('accessToken') && <Item className='item' onClick={logout}><RiLogoutBoxRLine color='#b54343' size={36} /></Item>}
+      {accessToken && <Item className='item' onClick={logout}><RiLogoutBoxRLine color='#b54343' size={36} /></Item>}
     </div>
   </>)
   

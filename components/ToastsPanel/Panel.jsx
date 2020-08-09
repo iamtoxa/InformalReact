@@ -3,7 +3,7 @@ import { RiHome2Line, RiMoreLine, RiMoonLine, RiUser2Line, RiLoginBoxLine, RiLog
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { AnimatePresence } from "framer-motion"
-import { useSelector, useDispatch, useStore } from "react-redux";
+import { useSelector } from "react-redux";
 import { TOGGLE_DARKTHEME } from "../../redux/actions";
 import { DELETE_AUCH } from "../../redux/actions";
 
@@ -13,13 +13,13 @@ const ToastPanel = () => {
   var [items, setItems] = useState([]);
   const [lastAdded, setLastAdded] = useState();
   const [lastID, setLastId] = useState(0);
-  const store = useStore()
 
   const itemsRef = useRef(items);
   itemsRef.current = items;
 
-  const appendToast = useSelector((state) => state.preferences.appendToast);
-  if (appendToast != lastAdded) {
+  const appendToast = useSelector((state) => state.modals.appendToast);
+  
+  if (appendToast && appendToast != lastAdded) {
     setLastAdded(appendToast)
     appendToast.id = lastID + 1;
     setLastId(lastID + 1)

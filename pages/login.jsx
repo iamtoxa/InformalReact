@@ -6,7 +6,7 @@ import { Container, Button, Form, OverlayTrigger, Tooltip } from 'react-bootstra
 import { FaGoogle, FaVk, FaYandex } from 'react-icons/fa'
 import { MdSend, MdLockOpen } from 'react-icons/md'
 
-import { UPDATE_ACCESS, CREATE_TOAST } from "~/redux/actions";
+import { SET_AUCH, CREATE_TOAST } from "~/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 
 import redirect from '~/lib/redirect'
@@ -179,7 +179,7 @@ const Page = ({ client: apolloClient, cookies }) => {
         });
 
         cookies.set('accessToken', data.login.token, { maxAge: 30 * 24 * 60 * 60, path: "/" });
-        dispatch({ type: UPDATE_ACCESS, value: data.login.token })
+        dispatch({ type: SET_AUCH, value: data.login.token })
         router.push('/')
 
         return true

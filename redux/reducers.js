@@ -1,21 +1,50 @@
 import * as actions from "./actions";
 import { combineReducers } from "redux";
 
-const preferences = (state = { darkThemeEnabled: false, access: false, appendToast: null}, action) => {
+const theme = (prevState, action) => {
+  if(prevState == undefined){
+    return {darkThemeEnabled: false}
+  }
+
   switch (action.type) {
-    case actions.TOGGLE_DARKTHEME:
-      return { ...state, darkThemeEnabled: !state.darkThemeEnabled };
-    case actions.UPDATE_ACCESS:
-      return { ...state, access: action.value };
-    case actions.DELETE_AUCH:
-      return { ...state, access: false };
-    case actions.CREATE_TOAST:
-      return { ...state, appendToast: action.props };
-    case actions.CREATE_MODAL:
-      return { ...state, appendModal: action.props };
+    case actions.SET_DARKTHEME:
+      return { ...prevState, darkThemeEnabled: action.value };
     default:
-      return state;
+      return prevState;
   }
 };
 
-export default combineReducers({ preferences });
+
+const auch = (prevState, action) => {
+  if(prevState == undefined){
+    return {access: undefined}
+  }
+
+  switch (action.type) {
+    case actions.SET_AUCH:
+      return { ...prevState, access: action.value };
+    default: 
+      return prevState;
+  }
+}
+
+
+const modals = (prevState, action) => {
+  if(prevState == undefined){
+    return {appendToast: null, appendModal: null}
+  }
+
+  switch (action.type) {
+    case actions.CREATE_TOAST:
+      return { ...prevState, appendToast: action.props };
+    case actions.CREATE_MODAL:
+      return { ...prevState, appendModal: action.props };
+    default: 
+      return prevState;
+  }
+}
+
+
+
+
+export default combineReducers({ theme, auch, modals });
