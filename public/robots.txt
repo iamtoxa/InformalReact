@@ -1,0 +1,11 @@
+User-agent: *
+
+Disallow: /lesson/ # запрещает доступ ко всем урокам
+Disallow: /lesson/* # запрещает доступ ко всем урокам
+
+Disallow: /controlPanel/ # запрещает доступ к панели управления
+Disallow: /controlPanel/* # запрещает доступ к панели управления
+
+Disallow: /user/me # Запрет на просмотр своего аккаунта
+
+Clean-param: ref /some_dir/get_book.pl
