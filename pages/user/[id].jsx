@@ -61,6 +61,7 @@ const Page = ({ selfPage, user }) => {
   return (<>
     <Head>
       {userInfo && (userInfo.firstName || userInfo.lastName) ? <title>{userInfo.firstName} {userInfo.lastName}</title> : <title>Страница пользователя</title>}
+      <meta name="Description" content={`Informal Place. Страница пользователя ${userInfo.firstName} ${userInfo.lastName}`.trim()} />
     </Head>
 
     <Container className='py-3' fluid>
