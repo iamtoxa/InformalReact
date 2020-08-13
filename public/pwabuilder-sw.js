@@ -121,3 +121,16 @@ self.addEventListener('fetch', (event) => {
     })());
   }
 });
+
+
+workbox.loadModule('workbox-cacheable-response');
+
+workbox.routing.registerRoute(
+  /.*\.(jpeg|png|jpg|css|js|gif)/,
+  new workbox.strategies.CacheFirst({
+    cacheName: CACHE,
+    plugins: [
+      new workbox.cacheableResponse.CacheableResponsePlugin({statuses: [200]}),
+    ],
+  }),
+);
