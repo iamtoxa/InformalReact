@@ -103,6 +103,12 @@
             "src": "/favicons/icon-76.png",
             "sizes": "76x76",
             "type": "image/png"
+        },
+        {
+            "src": "/favicons/maskable_icon.png",
+            "sizes": "545x545",
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ],
     "screenshots": [],
